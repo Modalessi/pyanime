@@ -1,3 +1,4 @@
+from requests.api import get
 from selenium import webdriver
 import selenium
 import json
@@ -55,17 +56,40 @@ def search(query):
 
 
 
+def get_seasons(search_result):
+	title = search_result["title"]
+	link = search_result["link"]
+	
+	reqult_page = requests.get(link)
+	soup = BeautifulSoup(reqult_page.content, HTML_PARSER)
+	
+	
+	seasons = []
+	seasons_div = soup.find("div", id = "seasonList")
+	seasons_divs = seasons_div.find_all("div", class_="col-xl-2 col-lg-3 col-md-6")
+	
+	for season_div in seasons_divs:
+		base_url = "https://www.faselhd.pro/?p="
+		season = {}
+		
+		season_id = seasons_div.find("div", class_="seasonDiv")["data-href"]
+		season["link"] = base_url + season_id
+		season["title"] = season_div.find("div", class_="seasonDiv").find("div", class_="title").text
+		
+		seasons.append(season)
+	return seasons
+	
 
 def get_anime_episodes(search_result) :
 	
-	titile = search_result["title"]
+	title = search_result["title"]
 	link = search_result["link"]
 	
 	reqult_page = requests.get(link)
 	soup = BeautifulSoup(reqult_page.content, HTML_PARSER)
 	
 	episodes = {}
-	
+		
 	episodes_div = soup.find("div", id = "epAll")
 	links = episodes_div.find_all("a")
 	
@@ -102,8 +126,6 @@ def get_m3u8_link(episode_link):
 	# print("quilities = ", quilities)
 	highest_quality = max(quilities)
 	
-	# get button where text is highest quality
-	button = driver.find_element_by_xpath(f"//button[@data-quality='{highest_quality}']")
 	# try :
 	# 	button.click()
 	# except selenium.common.exceptions.ElementClickInterceptedException :
@@ -123,14 +145,20 @@ def get_m3u8_link(episode_link):
 				url = event['params']['response']['url']
 			except KeyError :
 				continue
-			if "https://co8bau0l.faselhdstream.com/stream" in url :
+			if "faselhdstream.com/stream/hls" in url :
 				# driver.quit()
 				# print("="*100, "fount the url", "\n", url)
 				return event['params']['response']['url']
 	
 	
 
+def contains_seasons(search_result):
+	link = search_result["link"]
+	reqult_page = requests.get(link)
+	soup = BeautifulSoup(reqult_page.content, HTML_PARSER)
+	seasons_div = soup.find("div", id = "seasonList")
 	
+	return seasons_div != None
 	
 
 def main() :
@@ -152,7 +180,26 @@ def main() :
 		return
 	
 	anime = results[result_number]
-	episodes = get_anime_episodes(anime)
+	
+	if contains_seasons(anime) :
+		seasons = get_seasons(anime)
+		for index, season in enumerate(seasons):
+			color_print("[ " + str(index + 1) + " ] : " + season["title"], tcolors.OKCYAN)
+		
+		season = color_input("[ * ] - Enter number: ", tcolors.OKGREEN)
+		if season.isdigit():
+			season = int(season) - 1
+			if season < 0 or season >= len(seasons):
+				color_print("[ * ] - Invalid number", tcolors.FAIL)
+				return
+		else :
+			color_print("[ ERROR ] - Invalid number", tcolors.FAIL)
+			return
+		
+		season = seasons[season]
+		episodes = get_anime_episodes(season)
+	else :
+		episodes = get_anime_episodes(anime)
 	
 	for index, (episode, link) in enumerate(episodes.items()):
 		color_print(f"[ {index + 1} ] - {episode} ", tcolors.OKCYAN)
