@@ -12,13 +12,14 @@ from terminalColors import *
 import os
 
 
-HTML_PARSER = "lxml"
+HTML_PARSER = "html.parser"
 BASE_URL = "https://www.faselhd.pro/"
 PLAYER = "iina"
 	
 	
 def input_is_valid(n, mn, mx) :
 	if n.isdigit():
+		n = int(n)
 		if n < mn or n > mx:
 			return False
 	else :
@@ -97,7 +98,7 @@ def get_anime_episodes(search_result) :
 	reqult_page = requests.get(link)
 	soup = BeautifulSoup(reqult_page.content, HTML_PARSER)
 	
-	episodes = {}
+	episodes = []
 		
 	episodes_div = soup.find("div", id = "epAll")
 	links = episodes_div.find_all("a")
@@ -167,7 +168,7 @@ def show_table(elements, color1, color2) :
 		if index % 2 == 0 :
 			color_print(f"[{index + 1}] {element}", color1)
 		else :
-			color_print(f"[{index + 1} {element}", color2)
+			color_print(f"[{index + 1}] {element}", color2)
 	
 
 
@@ -208,18 +209,18 @@ def present_player_with_episode(episode) :
 
 
 def main() :
-	search_query = color_input("[ * ] - Enter search query: ", tcolors.OKGREEN)
+	search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
 	results = search(search_query)
 	
 	show_table([result["title"] for result in results], tcolors.OKCYAN, tcolors.OKBLUE)
 	
-	enterd_choice = color_input("[ * ] - Enter number: ", tcolors.OKGREEN)
+	enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
 	
 	if not input_is_valid(enterd_choice, 1, len(results)) :
-		color_print(f"[ ERROR] invalid input")
+		color_print(f"[ERROR] invalid input")
 		return
 	
-	choosen_result = results[enterd_choice - 1]
+	choosen_result = results[int(enterd_choice) - 1]
 	
 	if contains_seasons(choosen_result) :
 		seasons = get_seasons(choosen_result)
@@ -227,26 +228,25 @@ def main() :
 		
 		enterd_choice = color_input("[ * ] - Enter number: ", tcolors.OKGREEN)
 		if not input_is_valid(enterd_choice, 1, len(seasons)) :
-			color_print(f"[ ERROR] invalid input", tcolors.FAIL)
+			color_print(f"[ERROR] invalid input", tcolors.FAIL)
 			return
 		
-		season = seasons[enterd_choice - 1]
+		season = seasons[int(enterd_choice) - 1]
 		episodes = get_anime_episodes(season)
 	else :
 		episodes = get_anime_episodes(choosen_result)
 	
 	
-	show_table([episode["title"] for episode in episodes])
+	show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
 	
-	episode_number = color_input("[ * ] - Enter episode number: ", tcolors.OKGREEN)
-	enterd_choice = color_input("[ * ] - Enter number: ", tcolors.OKGREEN)
+	enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
 	
 	if not input_is_valid(enterd_choice, 1, len(episodes)) :
-		color_print(f"[ ERROR] invalid input", tcolors.FAIL)
+		color_print(f"[ERROR] invalid input", tcolors.FAIL)
 		return
 	
 	
-	controller(episodes, enterd_choice)
+	controller(episodes, int(enterd_choice))
 	
 	
 	
