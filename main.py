@@ -173,9 +173,9 @@ def show_table(elements, color1, color2) :
 
 
 def controller(episodes, currentIndex) :
-	
+	print("\n"*2)
 	present_player_with_episode(episodes[currentIndex - 1])
-	color_print(f"Currently playing [{currentIndex} / {len(episodes)}]", tcolors.OKGREEN)
+	color_print(f"	Currently playing [{currentIndex} / {len(episodes)}]", tcolors.OKGREEN)
 
 	if currentIndex < len(episodes) :
 		color_print(f"	[n] to play next episode", tcolors.OKCYAN)
@@ -201,9 +201,8 @@ def controller(episodes, currentIndex) :
 
 def present_player_with_episode(episode) :
 	m3u8_link = get_m3u8_link(episode["link"])
-	
 	if PLAYER == "iina" :
-		cli_command = "unbuffer -p /usr/local/bin/iina-cli " + m3u8_link
+		cli_command = f"unbuffer -p /usr/local/bin/iina-cli '{m3u8_link}'"
 		os.system(cli_command)
 	
 
@@ -244,7 +243,6 @@ def main() :
 	if not input_is_valid(enterd_choice, 1, len(episodes)) :
 		color_print(f"[ERROR] invalid input", tcolors.FAIL)
 		return
-	
 	
 	controller(episodes, int(enterd_choice))
 	
