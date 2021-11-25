@@ -23,10 +23,10 @@ options = webdriver.ChromeOptions()
 # options.add_argument('--no-sandbox')
 options.add_argument('--headless')
 options.add_argument('--disable-gpu')
-options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 # /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
-driver = webdriver.Chrome("bin/chromedriver", options=options, desired_capabilities=caps)
+driver = webdriver.Chrome("drivers/chromedriver", options=options, desired_capabilities=caps)
 
 
 def process_browser_log_entry(entry):
