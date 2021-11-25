@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 import json
 import time
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -34,11 +35,11 @@ def input_is_valid(n, mn, mx) :
 caps = DesiredCapabilities.CHROME
 caps['goog:loggingPrefs'] = {'performance': 'ALL'}
 
+service = Service('drivers/chromedriver')
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--disable-gpu')
-
-driver = webdriver.Chrome("drivers/chromedriver", options=options, desired_capabilities=caps)
+driver = webdriver.Chrome(service = service, options=options, desired_capabilities=caps)
 
 def process_browser_log_entry(entry):
     response = json.loads(entry['message'])['message']
