@@ -14,8 +14,13 @@ import os
 
 HTML_PARSER = "html.parser"
 BASE_URL = "https://www.faselhd.pro/"
-PLAYER = "iina"
-	
+
+CONFIG_FILE = "config.json"
+
+with open(CONFIG_FILE) as f:
+	configurations = json.load(f)
+
+
 	
 def input_is_valid(n, mn, mx) :
 	if n.isdigit():
@@ -200,11 +205,16 @@ def controller(episodes, currentIndex) :
 
 
 def present_player_with_episode(episode) :
-	m3u8_link = get_m3u8_link(episode["link"])
-	if PLAYER == "iina" :
-		cli_command = f"unbuffer -p /usr/local/bin/iina-cli '{m3u8_link}'"
-		os.system(cli_command)
 	
+	player = configurations["media_playe"]
+	player_path = configurations["media_player_path"]
+	
+	m3u8_link = get_m3u8_link(episode["link"])
+	if player == "iina" :
+		cli_command = f"unbuffer -p {player_path} '{m3u8_link}'"
+		os.system(cli_command)
+	else :
+		color_print(f"Unsupported player {player}", tcolors.FAIL)
 
 
 def main() :
