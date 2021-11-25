@@ -40,8 +40,10 @@ caps['goog:loggingPrefs'] = {'performance': 'ALL'}
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--disable-gpu')
-options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-driver = webdriver.Chrome("bin/chromedriver", options=options, desired_capabilities=caps)
+# options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+driver = webdriver.Chrome("drivers/chromedriver", options=options, desired_capabilities=caps)
 
 
 def process_browser_log_entry(entry):
@@ -206,7 +208,7 @@ def controller(episodes, currentIndex) :
 
 def present_player_with_episode(episode) :
 	
-	player = configurations["media_playe"]
+	player = configurations["media_player"]
 	player_path = configurations["media_player_path"]
 	
 	m3u8_link = get_m3u8_link(episode["link"])

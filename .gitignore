@@ -1,6 +1,5 @@
 bin/
 .DS_Store
-drivers/
 include/
 lib/
 __pycache__/

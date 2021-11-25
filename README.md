@@ -1,0 +1,30 @@
+# PYANIME
+
+a cli tool to watch animes and tv shows
+even though the name say anime, you can watch tv shows too 
+
+NOTE: movies will be supported in the future.
+
+
+
+## Media Players
+1. supported media players for now are ```IINA``` and ```VLC```
+
+2. so you need to have one of them installed in your system and specify its path in the config file
+
+
+## Installation
+
+1. first git clone the repo: ```git clone https://github.com/Modalessi/pyanime```
+
+2. create a virtual environment: ```python3 -m venv enviromentName```
+
+3. activate the virtual environment: ```source enviromentName/bin/activate```
+
+4. install the requirements: ```pip install -r requirements.txt```
+
+5. run the app: ```python3 pyanime.py```
+
+
+
+## Usage
