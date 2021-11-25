@@ -1,12 +1,9 @@
-from typing import Collection
-from requests.api import get
 from selenium import webdriver
-import selenium
 import json
 import time
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import urllib.parse
-from bs4 import BeautifulSoup, element
+from bs4 import BeautifulSoup
 import requests
 from terminalColors import *
 import os
@@ -40,11 +37,8 @@ caps['goog:loggingPrefs'] = {'performance': 'ALL'}
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--disable-gpu')
-# options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-# /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
 driver = webdriver.Chrome("drivers/chromedriver", options=options, desired_capabilities=caps)
-
 
 def process_browser_log_entry(entry):
     response = json.loads(entry['message'])['message']
@@ -212,11 +206,9 @@ def present_player_with_episode(episode) :
 	player_path = configurations["media_player_path"]
 	
 	m3u8_link = get_m3u8_link(episode["link"])
-	if player == "iina" :
-		cli_command = f"unbuffer -p {player_path} '{m3u8_link}'"
-		os.system(cli_command)
-	else :
-		color_print(f"Unsupported player {player}", tcolors.FAIL)
+	# unbuffer -p 
+	clie_command = f"unbuffer -p {player_path} '{m3u8_link}'"
+	os.system(clie_command)
 
 
 def main() :
@@ -262,5 +254,5 @@ def main() :
 	
 	
 	
-
+# /usr/local/bin/iina-cli
 main()

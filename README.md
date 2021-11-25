@@ -28,3 +28,17 @@ NOTE: movies will be supported in the future.
 
 
 ## Usage
+
+1. after you run the tool using ```python pyanime.py``` it will prompt you to enter a search query 
+   ![step1](imgs/step1.png "first step: search for a tv show or an anime")
+   
+2. enter the number of the result you want to watch:
+   ![step2](imgs/step2.png "second step: choose the result you want to watch")
+   
+3. enter the number of the episode you want to watch:
+   ![step3](imgs/step3.png "third step: choose the episode you want to watch")
+   
+4. the episode will open and a controller will show up for you in order to move forward, backward or exit the app
+   ![step4](imgs/step4.png "fourth step: you can move forward, backward or exit the app")
+   
+5. enjoy!
