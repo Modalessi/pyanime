@@ -8,10 +8,9 @@ NOTE: movies will be supported in the future.
 
 
 ## Media Players
-1. supported media players for now are ```IINA``` and ```VLC```
+1. supported media players for now are ```IINA``` and ```MPV```
 
 2. so you need to have one of them installed in your system and specify its path in the config file
-
 
 ## Installation
 
