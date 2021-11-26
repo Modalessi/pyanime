@@ -12,6 +12,10 @@ NOTE: movies will be supported in the future.
 
 2. so you need to have one of them installed in your system and specify it in the config file
 
+3. you can install MPV from here https://mpv.io/installation/
+   
+4. you can install IINA from here https://iina.io/
+
 ## Installation
 
 1. first git clone the repo: ```git clone https://github.com/Modalessi/pyanime```
