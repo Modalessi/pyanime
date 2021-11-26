@@ -174,38 +174,10 @@ def show_table(elements, color1, color2) :
 	
 
 
-def controller(episodes, currentIndex) :
-	print("\n"*2)
-	present_player_with_episode(episodes[currentIndex - 1])
-	color_print(f"	Currently playing [{currentIndex} / {len(episodes)}]", tcolors.OKGREEN)
-
-	if currentIndex < len(episodes) :
-		color_print(f"	[n] to play next episode", tcolors.OKCYAN)
-	
-	if currentIndex > 1 :
-		color_print(f"	[p] to play previous episode", tcolors.OKBLUE)
-	
-	
-	color_print(f"	[q] to exit", tcolors.WARNING)
-	
-	choice = color_input(f"	[*] choice: ", tcolors.OKGREEN)
-	
-	if choice.lower() == "n" :
-		controller(episodes, currentIndex + 1)
-	elif choice.lower() == "p" :
-		controller(episodes, currentIndex - 1)
-	elif choice.lower() == "q" :
-		return
-	else :
-		color_print("Invalid input", tcolors.FAIL)
-		return
-
 
 def present_player_with_episode(episode) :
 	
-	player = configurations["media_player"]
-	player_path = configurations["media_player_path"]
-	
+	player = configurations["media_player"]	
 	m3u8_link = get_m3u8_link(episode["link"])
 	
 	if player == "iina" :
@@ -254,7 +226,7 @@ def main() :
 		color_print(f"[ERROR] invalid input", tcolors.FAIL)
 		return
 	
-	controller(episodes, int(enterd_choice))
+	present_player_with_episode(episodes[int(enterd_choice) - 1])
 	
 	
 	
