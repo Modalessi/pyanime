@@ -207,9 +207,14 @@ def present_player_with_episode(episode) :
 	player_path = configurations["media_player_path"]
 	
 	m3u8_link = get_m3u8_link(episode["link"])
-	# unbuffer -p 
-	clie_command = f"unbuffer -p {player_path} '{m3u8_link}'"
-	os.system(clie_command)
+	
+	if player == "iina" :
+		cli_command = f"unbuffer -p {player_path} '{m3u8_link}'"
+		os.system(cli_command)
+	elif player == "mpv" :
+		cli_command = f"mpv --no-terminal '{m3u8_link}'"
+		os.system(cli_command)
+		
 
 
 def main() :
