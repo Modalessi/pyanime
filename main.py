@@ -193,6 +193,10 @@ def main() :
 	search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
 	results = search(search_query)
 	
+	if len(results) == 0 :
+		color_print("[!] - No results found :(", tcolors.FAIL)
+		return
+	
 	show_table([result["title"] for result in results], tcolors.OKCYAN, tcolors.OKBLUE)
 	
 	enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
@@ -226,6 +230,7 @@ def main() :
 		color_print(f"[ERROR] invalid input", tcolors.FAIL)
 		return
 	
+	color_print("Enjoy ;)", tcolors.OKBLUE)
 	present_player_with_episode(episodes[int(enterd_choice) - 1])
 	
 	
