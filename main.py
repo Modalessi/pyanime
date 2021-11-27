@@ -174,6 +174,16 @@ def show_table(elements, color1, color2) :
 	
 
 
+def isMovie(result) :
+	link = result["link"]
+	
+	reqult_page = requests.get(link)
+	soup = BeautifulSoup(reqult_page.content, HTML_PARSER)
+	
+	episodes_div = soup.find("div", id = "epAll")
+	
+	return episodes_div == None
+
 
 def present_player_with_episode(episode) :
 	
@@ -206,6 +216,13 @@ def main() :
 		return
 	
 	choosen_result = results[int(enterd_choice) - 1]
+	
+	
+	if isMovie(choosen_result) :
+		color_print("Enjoy ;)", tcolors.OKBLUE)
+		present_player_with_episode(choosen_result)
+		return
+	
 	
 	if contains_seasons(choosen_result) :
 		seasons = get_seasons(choosen_result)

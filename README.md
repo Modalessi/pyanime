@@ -1,9 +1,7 @@
 # PYANIME
 
 a cli tool to watch animes and tv shows
-even though the name say anime, you can watch tv shows too 
-
-NOTE: movies will be supported in the future.
+even though the name say anime, you can watch movies and tv shows too 
 
 
 
