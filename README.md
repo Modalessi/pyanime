@@ -1,9 +1,6 @@
 # PYANIME
 
-a cli tool to watch animes and tv shows
-even though the name say anime, you can watch movies and tv shows too 
-
-
+a cli tool to watch animes, tv shows and movies for free and without ads ;)
 
 ## Media Players
 1. supported media players for now are ```IINA``` and ```MPV```
@@ -39,7 +36,7 @@ even though the name say anime, you can watch movies and tv shows too
 3. enter the number of the episode you want to watch:
    ![step3](imgs/step3.png "third step: choose the episode you want to watch")
    
-4. the episode will open and a controller will show up for you in order to move forward, backward or exit the app
+4. the media player will start playing episode
    ![step4](imgs/step4.png "fourth step: you can move forward, backward or exit the app")
    
 5. enjoy!
