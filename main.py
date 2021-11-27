@@ -69,7 +69,6 @@ def search(query):
 
 
 def get_seasons(search_result):
-	title = search_result["title"]
 	link = search_result["link"]
 	
 	reqult_page = requests.get(link)
@@ -94,7 +93,6 @@ def get_seasons(search_result):
 
 def get_anime_episodes(search_result) :
 	
-	title = search_result["title"]
 	link = search_result["link"]
 	
 	reqult_page = requests.get(link)
@@ -212,7 +210,7 @@ def main() :
 	enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
 	
 	if not input_is_valid(enterd_choice, 1, len(results)) :
-		color_print(f"[ERROR] invalid input")
+		color_print(f"[ERROR] invalid input", tcolors.FAIL)
 		return
 	
 	choosen_result = results[int(enterd_choice) - 1]
@@ -254,5 +252,4 @@ def main() :
 	
 	
 	
-# /usr/local/bin/iina-cli
 main()
