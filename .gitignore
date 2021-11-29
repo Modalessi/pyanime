@@ -4,4 +4,4 @@ include/
 lib/
 __pycache__/
 *.cfg
-
+.venv
