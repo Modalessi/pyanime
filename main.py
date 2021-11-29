@@ -136,13 +136,14 @@ def get_m3u8_link(episode_link):
             break
 
     driver.get(frame_link)
-    frame_soup = BeautifulSoup(driver.page_source, HTML_PARSER)
 
-    buttons_div = frame_soup.find("div", class_="quality_change")
-    quilities_buttons = buttons_div.find_all("button", class_="hd_btn")
-    quilities = [int(btn["data-quality"]) if btn["data-quality"]
-                 != "auto" else 0 for btn in quilities_buttons]
-    highest_quality = max(quilities)
+    #frame_soup = BeautifulSoup(driver.page_source, HTML_PARSER)
+
+    # buttons_div = frame_soup.find("div", class_="quality_change")
+    # quilities_buttons = buttons_div.find_all("button", class_="hd_btn")
+    # quilities = [int(btn["data-quality"]) if btn["data-quality"]
+    #              != "auto" else 0 for btn in quilities_buttons]
+    # highest_quality = max(quilities)
 
     driver.execute_script("$('.hd_btn').click();")
     time.sleep(0.5)
@@ -198,7 +199,7 @@ def present_player_with_episode(episode):
         cli_command = f"unbuffer -p {player} '{m3u8_link}'"
         os.system(cli_command)
     else:
-        cli_command = f"{player} --no-terminal '{m3u8_link}'"
+        cli_command = f"{player} --no-terminal \"{m3u8_link}\""
         os.system(cli_command)
 
 
