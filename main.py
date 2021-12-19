@@ -31,22 +31,17 @@ def input_is_valid(n, mn, mx):
     return True
 
 
-driver_name = ""
-if sys.platform == "win32":
-    driver_name = "chromedriver.exe"
-else:
-    driver_name = "chromedriver"
+driver_name = "chromedriver.exe" if sys.platform == "win32" else "chromedriver"
 
 
 caps = DesiredCapabilities.CHROME
 caps['goog:loggingPrefs'] = {'performance': 'ALL'}
 
-service = Service(f'drivers/{driver_name}')
+service = Service(f"drivers/{driver_name}")
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--disable-gpu')
-driver = webdriver.Chrome(
-    service=service, options=options, desired_capabilities=caps)
+driver = webdriver.Chrome(service=service, options=options, desired_capabilities=caps)
 
 
 def process_browser_log_entry(entry):
@@ -95,8 +90,7 @@ def get_seasons(search_result):
 
         season_id = seasons_div.find("div", class_="seasonDiv")["data-href"]
         season["link"] = base_url + season_id
-        season["title"] = season_div.find(
-            "div", class_="seasonDiv").find("div", class_="title").text
+        season["title"] = season_div.find("div", class_="seasonDiv").find("div", class_="title").text
 
         seasons.append(season)
     return seasons
@@ -140,8 +134,7 @@ def get_m3u8_link(episode_link):
 
     buttons_div = frame_soup.find("div", class_="quality_change")
     quilities_buttons = buttons_div.find_all("button", class_="hd_btn")
-    quilities = [int(btn["data-quality"]) if btn["data-quality"]
-                 != "auto" else 0 for btn in quilities_buttons]
+    quilities = [int(btn["data-quality"]) if btn["data-quality"] != "auto" else 0 for btn in quilities_buttons]
     highest_quality = max(quilities)
 
     driver.execute_script("$('.hd_btn').click();")
@@ -150,8 +143,7 @@ def get_m3u8_link(episode_link):
     while True:
         browser_log = driver.get_log('performance')
         events = [process_browser_log_entry(entry) for entry in browser_log]
-        events = [
-            event for event in events if 'Network.response' in event['method']]
+        events = [event for event in events if 'Network.response' in event['method']]
         for event in events:
             try:
                 url = event['params']['response']['url']
@@ -210,8 +202,7 @@ def main():
         color_print("[!] - No results found :(", tcolors.FAIL)
         return
 
-    show_table([result["title"]
-               for result in results], tcolors.OKCYAN, tcolors.OKBLUE)
+    show_table([result["title"] for result in results], tcolors.OKCYAN, tcolors.OKBLUE)
 
     enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
 
@@ -228,8 +219,7 @@ def main():
 
     if contains_seasons(choosen_result):
         seasons = get_seasons(choosen_result)
-        show_table([season["title"]
-                   for season in seasons], tcolors.OKCYAN, tcolors.OKBLUE)
+        show_table([season["title"] for season in seasons], tcolors.OKCYAN, tcolors.OKBLUE)
 
         enterd_choice = color_input("[ * ] - Enter number: ", tcolors.OKGREEN)
         if not input_is_valid(enterd_choice, 1, len(seasons)):
@@ -241,8 +231,7 @@ def main():
     else:
         episodes = get_anime_episodes(choosen_result)
 
-    show_table([episode["title"]
-               for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
+    show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
 
     enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
 
