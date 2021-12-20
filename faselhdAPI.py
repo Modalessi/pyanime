@@ -62,7 +62,7 @@ class FaselhdAPI() :
     # takes a search result and returns a list of dictionaries with the seasons
     # each season can be treated as a search result
     def get_seasons(result) :
-        link = search_result["link"]
+        link = result["link"]
 
         reqult_page = requests.get(link)
         soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
