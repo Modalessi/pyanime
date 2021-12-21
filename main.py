@@ -1,4 +1,5 @@
 import json
+from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
 import os
@@ -50,50 +51,108 @@ def main():
     
     search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
-
-    if len(faselhd_results) == 0:
-        color_print("[!] - No results found :(", tcolors.FAIL)
+    egybest_results = EgybestAPI.search(search_query)
+    
+    results = []
+    
+    for i ,result in enumerate(faselhd_results + egybest_results) :
+        if result in faselhd_results :
+            result["source"] = "faselhd"
+        else :
+            result["source"] = "egybest"
+            
+        color_print(f"{i + 1} - [{result['source']}] {result['title']}", tcolors.OKBLUE if result["source"] == "faselhd" else tcolors.OKCYAN)
+        
+        results.append(result)
+    
+    
+    if len(results) == 0 :
+        color_print("[-] - No results found.", tcolors.FAIL)
         return
-
-    show_table([result["title"] for result in faselhd_results], tcolors.OKCYAN, tcolors.OKBLUE)
-
-    enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
-
-    if not input_is_valid(enterd_choice, 1, len(faselhd_results)):
-        color_print(f"[ERROR] invalid input", tcolors.FAIL)
+    
+    
+    enterd_choice = color_input("[*] - Enter choice: ", tcolors.OKGREEN)
+    
+    if not input_is_valid(enterd_choice, 1, len(results)):
+        color_print("[-] - Invalid choice.", tcolors.FAIL)
         return
-
-    choosen_result = faselhd_results[int(enterd_choice) - 1]
-
-    if FaselhdAPI.is_movie(choosen_result):
-        color_print("Enjoy ;)", tcolors.OKBLUE)
-        present_player_with_episode(choosen_result)
-        return
-
-    if FaselhdAPI.contains_seasons(choosen_result):
-        seasons = FaselhdAPI.get_seasons(choosen_result)
-        show_table([season["title"] for season in seasons], tcolors.OKCYAN, tcolors.OKBLUE)
-
-        enterd_choice = color_input("[ * ] - Enter number: ", tcolors.OKGREEN)
-        if not input_is_valid(enterd_choice, 1, len(seasons)):
-            color_print(f"[ERROR] invalid input", tcolors.FAIL)
+    
+    selected_result = results[int(enterd_choice) - 1]
+    
+    if selected_result["source"] == "faselhd":
+        
+        if FaselhdAPI.is_movie(selected_result) :
+            m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
+            present_player_with_episode(m3u8_link)
             return
-
-        season = seasons[int(enterd_choice) - 1]
-        episodes = FaselhdAPI.get_episodes(season)
-    else:
-        episodes = FaselhdAPI.get_episodes(choosen_result)
-
-    show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
-
-    enterd_choice = color_input("[*] - Enter number: ", tcolors.OKGREEN)
-
-    if not input_is_valid(enterd_choice, 1, len(episodes)):
-        color_print(f"[ERROR] invalid input", tcolors.FAIL)
-        return
-
-    color_print("Enjoy ;)", tcolors.OKBLUE)
-    present_player_with_episode(FaselhdAPI.get_m3u8_link(episodes[int(enterd_choice) - 1]))
-
-
+        
+        if FaselhdAPI.contains_seasons(selected_result) :
+            seasons = FaselhdAPI.get_seasons(selected_result)
+            show_table([season["title"] for season in seasons], tcolors.OKBLUE, tcolors.OKCYAN)
+            
+            enterd_season = color_input("[*] - Enter season: ", tcolors.OKGREEN)
+            
+            if not input_is_valid(enterd_season, 1, len(seasons)):
+                color_print("[-] - Invalid season.", tcolors.FAIL)
+                return
+            
+            selected_result = seasons[int(enterd_season) - 1]
+        
+        episodes = FaselhdAPI.get_episodes(selected_result)
+        show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
+        
+        enterd_episode = color_input("[*] - Enter episode: ", tcolors.OKGREEN)
+        
+        if not input_is_valid(enterd_episode, 1, len(episodes)):
+            color_print("[-] - Invalid episode.", tcolors.FAIL)
+            return
+        
+        selected_result = episodes[int(enterd_episode) - 1]
+        
+        m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
+        present_player_with_episode(m3u8_link)
+        
+        return    
+    
+            
+        
+    elif selected_result["source"] == "egybest" :
+        if EgybestAPI.is_movie(selected_result) :
+            m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
+            present_player_with_episode(m3u8_link)
+            return
+        
+        if EgybestAPI.contains_seasons(selected_result) :
+            seasons = EgybestAPI.get_seasons(selected_result)
+            show_table([season["title"] for season in seasons], tcolors.OKBLUE, tcolors.OKCYAN)
+            
+            enterd_season = color_input("[*] - Enter season: ", tcolors.OKGREEN)
+            
+            if not input_is_valid(enterd_season, 1, len(seasons)):
+                color_print("[-] - Invalid season.", tcolors.FAIL)
+                return
+            
+            selected_result = seasons[int(enterd_season) - 1]
+        
+        episodes = EgybestAPI.get_episodes(selected_result)
+        show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
+        
+        enterd_episode = color_input("[*] - Enter episode: ", tcolors.OKGREEN)
+        
+        if not input_is_valid(enterd_episode, 1, len(episodes)):
+            color_print("[-] - Invalid episode.", tcolors.FAIL)
+            return
+        
+        selected_result = episodes[int(enterd_episode) - 1]
+        
+        m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
+        present_player_with_episode(m3u8_link)
+        
+        return    
+        
+    
+    
+    
+    
+            
 main()

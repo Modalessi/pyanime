@@ -149,7 +149,11 @@ class FaselhdAPI() :
                 except KeyError:
                     continue
                 if "faselhdstream.com/stream/hls" in url:
+                    driver.quit()
                     return url
+                    
+                    
+        
                     
                     
         

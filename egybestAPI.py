@@ -38,6 +38,10 @@ class EgybestAPI() :
     
     
     
+    def is_movie(result) :
+        return not EgybestAPI.contains_seasons(result)
+    
+    
     def contains_seasons(result) :
         link = result["link"]
         result_page = requests.get(link)
@@ -169,5 +173,5 @@ class EgybestAPI() :
                     m3u8_links.append(url)
                         
                 
-        
+        driver.quit()
         return m3u8_links[-1]
