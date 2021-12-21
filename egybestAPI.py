@@ -87,7 +87,7 @@ class EgybestAPI() :
             
             seasons.append(season)
             
-        return seasons
+        return seasons[::-1]
         
         
         
@@ -120,7 +120,7 @@ class EgybestAPI() :
             
             episodes.append(episode)
         
-        return episodes
+        return episodes[::-1]
         
         
         
