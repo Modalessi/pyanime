@@ -41,8 +41,8 @@ class FaselhdAPI() :
     def is_movie(result) :
         link = result["link"]
 
-        reqult_page = requests.get(link)
-        soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
+        result_page = requests.get(link)
+        soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         episodes_div = soup.find("div", id="epAll")
 
@@ -149,7 +149,7 @@ class FaselhdAPI() :
                 except KeyError:
                     continue
                 if "faselhdstream.com/stream/hls" in url:
-                    return event['params']['response']['url']
+                    return url
                     
                     
         
