@@ -122,8 +122,8 @@ class EgybestAPI() :
         
         return episodes[::-1]
         
-        
-        
+    
+    
     def get_m3u8_link(result) :
         link = result["link"]
         result_page = requests.get(link)
@@ -144,34 +144,28 @@ class EgybestAPI() :
         driver = webdriver.Chrome(service=service, options=options, desired_capabilities=caps)
         driver.get(frame_link)
 
-        driver.execute_script("$('.hd_btn').click();")
-        
         driver.find_element_by_xpath('/html/body/div/i').click()
         
         pageLoaded = False
         while not pageLoaded :
             try :
-                driver.find_element_by_xpath('//*[@id="video"]/button').click()
+                soup = BeautifulSoup(driver.page_source, EgybestAPI.HTML_PARSER)
+                source = soup.find("video", id = "video_html5_api").find("source")["src"]
                 pageLoaded = True
-            except common.exceptions.NoSuchElementException :
+            except AttributeError :
                 time.sleep(0.75)
                 continue
-                
-                
-        m3u8_links = []
+            
         
-        while len(m3u8_links) < 3:
-            browser_log = driver.get_log('performance')
-            events = [(json.loads(entry['message'])['message']) for entry in browser_log]
-            events = [event for event in events if 'Network.response' in event['method']]
-            for event in events:
-                try:
-                    url = event['params']['response']['url']
-                except KeyError:
-                    continue
-                if "m3u8" in url :
-                    m3u8_links.append(url)
-                        
-                
-        driver.quit()
-        return m3u8_links[-1]
+        source = "https://www.egybest.org" + source
+        
+        
+        m3u8_file = requests.get(source)
+        m3u8_file = m3u8_file.text.split("\n")
+        m3u8_file = list(filter(lambda x : x != "", m3u8_file))
+            
+        
+        return m3u8_file[-1]
+        
+        
+        

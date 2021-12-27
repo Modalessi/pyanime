@@ -17,8 +17,8 @@ class FaselhdAPI() :
     # Takes a query to search in fasel hd website and returns a list of dictionaries
     def search(query):
         
-        reqult_page = requests.get(FaselhdAPI.BASE_URL, params = {"s": query})
-        soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
+        result_page = requests.get(FaselhdAPI.BASE_URL, params = {"s": query})
+        soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         animes_div = soup.find("div", id="postList")
         animes = animes_div.find_all("div", class_="col-xl-2 col-lg-2 col-md-3 col-sm-3")

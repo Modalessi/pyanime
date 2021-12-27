@@ -6,9 +6,6 @@ import os
 
 
 
-HTML_PARSER = "html.parser"
-BASE_URL = "https://www.faselhd.pro/"
-
 CONFIG_FILE = "config.json"
 
 with open(CONFIG_FILE) as f:
