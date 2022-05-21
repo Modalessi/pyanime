@@ -1,6 +1,8 @@
 # PYANIME
 
 a cli tool to watch animes, tv shows and movies for free and without ads ;)
+it does it by scrapping Faselhd and egybest websites
+
 
 ## Media Players
 1. supported media players for now are ```IINA``` and ```MPV```
@@ -21,22 +23,24 @@ a cli tool to watch animes, tv shows and movies for free and without ads ;)
 
 4. install the requirements: ```pip install -r requirements.txt```
 
-5. run the app: ```python3 pyanime.py```
+5. run the app: ```python3 main.py```
 
 
 
 ## Usage
 
-1. after you run the tool using ```python pyanime.py``` it will prompt you to enter a search query 
+1. after you run the tool using ```python3 main.py``` it will prompt you to enter a search query :
    ![step1](imgs/step1.png "first step: search for a tv show or an anime")
    
-2. enter the number of the result you want to watch:
+2. enter the number of the result you want to watch (egybest is recommended) :
    ![step2](imgs/step2.png "second step: choose the result you want to watch")
    
-3. enter the number of the episode you want to watch:
-   ![step3](imgs/step3.png "third step: choose the episode you want to watch")
+3. if the show has more than one season it will ask you to enter the season number:
+   ![step3](imgs/step3.png "third step: choose the season you want to watch")
    
-4. the media player will start playing episode
-   ![step4](imgs/step4.png "fourth step: you can move forward, backward or exit the app")
+4. enter the episode number that you want to watch:
+   ![step4](imgs/step4.png "fourth step: choose the episode you want to watch")
    
-5. enjoy!
+
+5. enjoy ;)
+   ![step5](imgs/step5.png "fifth step: enjoy")
