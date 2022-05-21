@@ -2,6 +2,7 @@ import json
 from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
+import colorama 
 import os
 
 
@@ -23,15 +24,17 @@ def input_is_valid(n, mn, mx):
     return True
 
 
-def present_player_with_episode(m3u8_link):
 
+
+def present_player_with_episode(m3u8_link):
+    
     player = configurations["media_player"]
 
-    if player == "iina":
+    if player == "iina-cli":
         cli_command = f"unbuffer -p {player} '{m3u8_link}'"
         os.system(cli_command)
     else:
-        cli_command = f"{player} --no-terminal '{m3u8_link}'"
+        cli_command = f"{player} --no-terminal \"{m3u8_link}\""
         os.system(cli_command)
 
 
@@ -42,9 +45,12 @@ def show_table(elements, color1, color2):
         else:
             color_print(f"[{index + 1}] {element}", color2)
 
+    
 
 
 def main():
+    
+    colorama.init()
     
     search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
@@ -109,7 +115,7 @@ def main():
         m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
         present_player_with_episode(m3u8_link)
         
-        return    
+
     
             
         
@@ -145,7 +151,8 @@ def main():
         m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
         present_player_with_episode(m3u8_link)
         
-        return    
+    
+        
         
     
     

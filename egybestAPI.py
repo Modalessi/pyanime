@@ -12,12 +12,12 @@ import sys
 
 class EgybestAPI() :
     
-    BASE_URL = "https://www.egybest.org/"
+    BASE_URL = "https://big.egybest.monster/"
     HTML_PARSER = "html.parser"
 
 
     def search(query) :
-        search_url = "https://www.egybest.org/explore/"
+        search_url = "https://big.egybest.monster/explore/"
         reqult_page = requests.get(search_url, params = {"q": query})
         
         soup = BeautifulSoup(reqult_page.content, EgybestAPI.HTML_PARSER)
@@ -130,7 +130,7 @@ class EgybestAPI() :
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
         
-        frame_link = EgybestAPI.BASE_URL[:-1] + soup.find("iframe", class_="auto-size")["src"]        
+        frame_link = EgybestAPI.BASE_URL[:-1] + soup.find("iframe", class_="auto-size")["src"]
         
         driver_name = "chromedriver.exe" if sys.platform == "win32" else "chromedriver"
         caps = DesiredCapabilities.CHROME
@@ -157,13 +157,14 @@ class EgybestAPI() :
                 continue
             
         
-        source = "https://www.egybest.org" + source
+        source = "https://big.egybest.monster" + source
         
         
         m3u8_file = requests.get(source)
         m3u8_file = m3u8_file.text.split("\n")
+        
         m3u8_file = list(filter(lambda x : x != "", m3u8_file))
-            
+        
         
         return m3u8_file[-1]
         
