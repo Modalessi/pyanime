@@ -12,7 +12,7 @@ import sys
 class FaselhdAPI() :
     
     HTML_PARSER = "html.parser"
-    BASE_URL = BASE_URL = "https://www.faselhd.pro/"
+    BASE_URL = BASE_URL = "https://www.faselhd.top"
     
     # Takes a query to search in fasel hd website and returns a list of dictionaries
     def search(query):
@@ -75,7 +75,7 @@ class FaselhdAPI() :
             base_url = "https://www.faselhd.pro/?p="
             season = {}
 
-            season_id = seasons_div.find("div", class_="seasonDiv")["data-href"]
+            season_id = season_div.find("div", class_="seasonDiv")["data-href"]
             season["link"] = base_url + season_id
             season["title"] = season_div.find("div", class_="seasonDiv").find("div", class_="title").text
 
@@ -109,7 +109,7 @@ class FaselhdAPI() :
     # this is the worst function i wrote 
     # i beleive there can be a better way to do this
     # however in order to make this work i had to use selenium
-    # this method takes an episode link or a movie link and returns m3u8 link
+    # this method takes an episode or a movie and returns m3u8 link
     # m3u8 link can then be passed to media player to play the video
     def get_m3u8_link(result):
         
@@ -148,21 +148,6 @@ class FaselhdAPI() :
                     url = event['params']['response']['url']
                 except KeyError:
                     continue
-                if "faselhdstream.com/stream/hls" in url:
+                if "/stream/v1/hls/" in url:
                     driver.quit()
                     return url
-                    
-                    
-        
-                    
-                    
-        
-        
-        
-        
-        
-            
-            
-        
-        
-            

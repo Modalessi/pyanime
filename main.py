@@ -2,7 +2,6 @@ import json
 from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
-import colorama 
 import os
 
 
@@ -49,9 +48,7 @@ def show_table(elements, color1, color2):
 
 
 def main():
-    
-    colorama.init()
-    
+        
     search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
     egybest_results = EgybestAPI.search(search_query)
