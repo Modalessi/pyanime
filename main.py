@@ -28,7 +28,6 @@ def input_is_valid(n, mn, mx):
 def present_player_with_episode(m3u8_link):
     
     player = configurations["media_player"]
-
     if player == "iina-cli":
         cli_command = f"unbuffer -p {player} '{m3u8_link}'"
         os.system(cli_command)

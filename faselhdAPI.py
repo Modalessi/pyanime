@@ -106,48 +106,24 @@ class FaselhdAPI() :
         
     
     
-    # this is the worst function i wrote 
-    # i beleive there can be a better way to do this
-    # however in order to make this work i had to use selenium
     # this method takes an episode or a movie and returns m3u8 link
     # m3u8 link can then be passed to media player to play the video
     def get_m3u8_link(result):
         
-        reqult_page = requests.get(result["link"])
-        soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
+        result_page = requests.get(result["link"])
+        soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
         frames = soup.find_all("iframe")
-
+        
         frame_link = ""
         for frame in frames:
-            if frame["name"] == "player_iframe":
+            if frame["name"] == "player_iframe" :
                 frame_link = frame["src"]
                 break
-            
-            
-        driver_name = "chromedriver.exe" if sys.platform == "win32" else "chromedriver"
-        caps = DesiredCapabilities.CHROME
-        caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-
-        service = Service(f"drivers/{driver_name}")
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        driver = webdriver.Chrome(service=service, options=options, desired_capabilities=caps)
-        driver.get(frame_link)
-
-        driver.execute_script("$('.hd_btn').click();")
-        time.sleep(0.5)
         
-        
-        while True:
-            browser_log = driver.get_log('performance')
-            events = [(json.loads(entry['message'])['message']) for entry in browser_log]
-            events = [event for event in events if 'Network.response' in event['method']]
-            for event in events:
-                try:
-                    url = event['params']['response']['url']
-                except KeyError:
-                    continue
-                if "/stream/v1/hls/" in url:
-                    driver.quit()
-                    return url
+        iframe_page = requests.get(frame_link)
+        soup = BeautifulSoup(iframe_page.content, FaselhdAPI.HTML_PARSER)
+        buttons = soup.find_all("button", class_="hd_btn")
+        buttons.pop(0)
+        buttons.sort(key=lambda x: int(x.text[:-1]))
+                
+        return buttons[-1]["data-url"]
