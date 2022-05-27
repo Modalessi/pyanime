@@ -1,4 +1,5 @@
 import json
+import sys
 from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
@@ -12,7 +13,12 @@ with open(CONFIG_FILE) as f:
     configurations = json.load(f)
 
 
-def input_is_valid(n, mn, mx):
+def input_is_valid(n: int, mn: int, mx: int):
+    """
+    Checks if input in valid.
+    input is valid if it is in range [mn, mx]
+    """
+    
     if n.isdigit():
         n = int(n)
         if n < mn or n > mx:
@@ -25,7 +31,10 @@ def input_is_valid(n, mn, mx):
 
 
 
-def present_player_with_episode(m3u8_link):
+def present_player_with_episode(m3u8_link: str):
+    """
+    starts player with m3u8 link
+    """
     
     player = configurations["media_player"]
     if player == "iina-cli":
@@ -36,7 +45,10 @@ def present_player_with_episode(m3u8_link):
         os.system(cli_command)
 
 
-def show_table(elements, color1, color2):
+def show_table(elements: list, color1: str, color2: str):
+    """
+    prints elements in list format.
+    """
     for index, element in enumerate(elements):
         if index % 2 == 0:
             color_print(f"[{index + 1}] {element}", color1)
@@ -154,5 +166,9 @@ def main():
     
     
     
-            
-main()
+if __name__ == "__main__":
+    try :
+        main()        
+    except KeyboardInterrupt:
+        color_print("\n[*] - Exiting...", tcolors.WARNING)
+        sys.exit(0)
