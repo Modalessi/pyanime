@@ -66,6 +66,7 @@ def show_table(elements: list, color1: str, color2: str):
 
 
 def main():
+    os.system("")
         
     search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
