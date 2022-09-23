@@ -12,15 +12,15 @@ import sys
 
 class EgybestAPI() :
     
-    BASE_URL = "https://big.egybest.monster/"
+    BASE_URL = "https://mega.egybest.dev/"
     HTML_PARSER = "html.parser"
 
 
     def search(query) :
-        search_url = "https://big.egybest.monster/explore/"
-        reqult_page = requests.get(search_url, params = {"q": query})
+        search_url = "https://mega.egybest.dev/explore/" 
+        result_page = requests.get(search_url, params = {"q": query})
         
-        soup = BeautifulSoup(reqult_page.content, EgybestAPI.HTML_PARSER)
+        soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
         
         results_divs = soup.find("div", id="movies").findAll("a", class_="movie")
         
@@ -35,6 +35,7 @@ class EgybestAPI() :
             results.append(result)
         
         return results
+    
     
     
     
@@ -157,15 +158,13 @@ class EgybestAPI() :
                 continue
             
         
-        source = "https://big.egybest.monster" + source
+        source = "https://mega.egybest.dev" + source
         
         
         m3u8_file = requests.get(source)
         m3u8_file = m3u8_file.text.split("\n")
         
         m3u8_file = list(filter(lambda x : x != "", m3u8_file))
-        
-        
         return m3u8_file[-1]
         
         

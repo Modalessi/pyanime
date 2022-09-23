@@ -15,7 +15,7 @@ class FaselhdAPI() :
     BASE_URL = BASE_URL = "https://www.faselhd.club"
     
     # Takes a query to search in fasel hd website and returns a list of dictionaries
-    def search(query):
+    def search(query) :
         
         result_page = requests.get(FaselhdAPI.BASE_URL, params = {"s": query})
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
@@ -106,10 +106,12 @@ class FaselhdAPI() :
         
     
     
-    # this method takes an episode or a movie and returns m3u8 link
-    # m3u8 link can then be passed to media player to play the video
-    # this the worst function i have ever wrote
-    def get_m3u8_link(result):
+    def get_m3u8_link(result) :
+        '''
+        this method takes an episode or a movie and returns m3u8 link
+        m3u8 link can then be passed to media player to play the video
+        this is the worst function i have ever wrote
+        '''
         
         result_page = requests.get(result["link"])
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)

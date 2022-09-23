@@ -4,7 +4,8 @@ from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
 import os
-
+import sys
+import pyqrcode
 
 
 CONFIG_FILE = "config.json"
@@ -30,12 +31,18 @@ def input_is_valid(n: int, mn: int, mx: int):
 
 
 
+def generateQRCode(link) :
+    """
+    generates qr code with link
+    """
+    qr = pyqrcode.create(link)
+    qr.show()
+
 
 def present_player_with_episode(m3u8_link: str):
     """
     starts player with m3u8 link
     """
-    
     player = configurations["media_player"]
     if player == "iina-cli":
         cli_command = f"unbuffer -p {player} '{m3u8_link}'"
@@ -121,7 +128,10 @@ def main():
         selected_result = episodes[int(enterd_episode) - 1]
         
         m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
-        present_player_with_episode(m3u8_link)
+        if "-qr" in sys.argv :
+            generateQRCode(m3u8_link)
+        else :
+            present_player_with_episode(m3u8_link)
         
 
     
@@ -157,7 +167,10 @@ def main():
         selected_result = episodes[int(enterd_episode) - 1]
         
         m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
-        present_player_with_episode(m3u8_link)
+        if "-qr" in sys.argv :
+            generateQRCode(m3u8_link)
+        else :
+            present_player_with_episode(m3u8_link)
         
     
         
