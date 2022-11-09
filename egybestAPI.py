@@ -4,12 +4,12 @@ from bs4 import BeautifulSoup
 import requests
 from Configurations import Configurations
 from SeleniumHandler import SeleniumHandler
+from WebsiteAPIInterface import WebsiteAPIInterface
 
 
-
-class EgybestAPI() :
+class EgybestAPI(WebsiteAPIInterface) :
     
-    BASE_URL = "https://mega.egybest.dev"
+    BASE_URL = "https://aero.egybest.mba"
     HTML_PARSER = "html.parser"
 
 
@@ -80,7 +80,7 @@ class EgybestAPI() :
         for season_tag in seasons_tags :
             season = {}
             
-            season["link"] = season_tag["href"]
+            season["link"] = EgybestAPI.BASE_URL + season_tag["href"]
             season["title"] = season_tag.find("span", class_="title").text
             
             seasons.append(season)
@@ -113,7 +113,7 @@ class EgybestAPI() :
         for episode_tag in episode_tags :
             episode = {}
             
-            episode["link"] = episode_tag["href"]
+            episode["link"] = EgybestAPI.BASE_URL + episode_tag["href"]
             episode["title"] = episode_tag.find("span", class_="title").text
             
             episodes.append(episode)
@@ -124,12 +124,12 @@ class EgybestAPI() :
     
     def get_m3u8_link(result) :
         link = result["link"]
-        print("link: ", link)
         result_page = requests.get(link)
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
         
-        frame_link = EgybestAPI.BASE_URL[:-1] + soup.find("iframe", class_="auto-size")["src"]
+        frame_link = EgybestAPI.BASE_URL + soup.find("iframe", class_="auto-size")["src"]
+        print("frame link", frame_link)
         
         driver = SeleniumHandler().driver
         driver.get(frame_link)

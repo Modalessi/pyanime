@@ -17,9 +17,6 @@ class SeleniumHandler :
         self.options.add_argument('--headless')
         self.options.add_argument('--disable-gpu')
         self.options.add_argument("--mute-audio")
-        self.options.add_argument("--disable-extensions")
-        self.options.add_argument("--disable-dev-shm-usage")
-        self.options.add_argument("--no-sandbox")
         
         
         try :

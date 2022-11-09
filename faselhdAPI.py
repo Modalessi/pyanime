@@ -3,9 +3,11 @@ from SeleniumHandler import SeleniumHandler
 from bs4 import BeautifulSoup
 import requests
 from Configurations import Configurations
+from WebsiteAPIInterface import WebsiteAPIInterface
 
 
-class FaselhdAPI() :
+
+class FaselhdAPI(WebsiteAPIInterface) :
     
     HTML_PARSER = "html.parser"
     BASE_URL = "https://www.faselhd.club"
