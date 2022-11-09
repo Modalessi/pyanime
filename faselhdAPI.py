@@ -1,18 +1,14 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-import json
-import time
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import sys
+from SeleniumHandler import SeleniumHandler
 from bs4 import BeautifulSoup
 import requests
-import sys
-
+from Configurations import Configurations
 
 
 class FaselhdAPI() :
     
     HTML_PARSER = "html.parser"
-    BASE_URL = BASE_URL = "https://www.faselhd.club"
+    BASE_URL = "https://www.faselhd.club"
     
     # Takes a query to search in fasel hd website and returns a list of dictionaries
     def search(query) :
@@ -122,15 +118,7 @@ class FaselhdAPI() :
                 frame_link = frame["src"]
                 break
         
-        driver_name = "chromedriver.exe" if sys.platform == "win32" else "chromedriver"
-        caps = DesiredCapabilities.CHROME
-        caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-        service = Service(f"drivers/{driver_name}")
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        options.add_argument("--mute-audio")
-        driver = webdriver.Chrome(service=service, options=options, desired_capabilities=caps)
+        driver = SeleniumHandler().driver
         driver.get(frame_link)
         
         html_generated = False

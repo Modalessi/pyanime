@@ -1,23 +1,20 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium import common
-import json
+import sys
 import time
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from bs4 import BeautifulSoup
 import requests
-import sys
+from Configurations import Configurations
+from SeleniumHandler import SeleniumHandler
 
 
 
 class EgybestAPI() :
     
-    BASE_URL = "https://mega.egybest.dev/"
+    BASE_URL = "https://mega.egybest.dev"
     HTML_PARSER = "html.parser"
 
 
     def search(query) :
-        search_url = "https://mega.egybest.dev/explore/" 
+        search_url = EgybestAPI.BASE_URL + "/explore/" 
         result_page = requests.get(search_url, params = {"q": query})
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
@@ -29,7 +26,7 @@ class EgybestAPI() :
         for result_div in results_divs :
             result = {}
             
-            result["link"] = result_div["href"]
+            result["link"] = EgybestAPI.BASE_URL + result_div["href"]
             result["title"] = result_div.find("span", class_="title").text
             
             results.append(result)
@@ -127,22 +124,14 @@ class EgybestAPI() :
     
     def get_m3u8_link(result) :
         link = result["link"]
+        print("link: ", link)
         result_page = requests.get(link)
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
         
         frame_link = EgybestAPI.BASE_URL[:-1] + soup.find("iframe", class_="auto-size")["src"]
         
-        driver_name = "chromedriver.exe" if sys.platform == "win32" else "chromedriver"
-        caps = DesiredCapabilities.CHROME
-        caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-
-        service = Service(f"drivers/{driver_name}")
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        options.add_argument("--mute-audio")
-        driver = webdriver.Chrome(service=service, options=options, desired_capabilities=caps)
+        driver = SeleniumHandler().driver
         driver.get(frame_link)
 
         driver.find_element_by_xpath('/html/body/div/i').click()
@@ -158,7 +147,7 @@ class EgybestAPI() :
                 continue
             
         
-        source = "https://mega.egybest.dev" + source
+        source = EgybestAPI.BASE_URL + source
         
         
         m3u8_file = requests.get(source)

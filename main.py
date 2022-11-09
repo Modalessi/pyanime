@@ -1,17 +1,14 @@
 import json
 import sys
+import os
+import sys
 from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
-import os
-import sys
-import pyqrcode
+from Configurations import Configurations
 
 
-CONFIG_FILE = "config.json"
-
-with open(CONFIG_FILE) as f:
-    configurations = json.load(f)
+configs = Configurations().config
 
 
 def input_is_valid(n: int, mn: int, mx: int):
@@ -30,25 +27,16 @@ def input_is_valid(n: int, mn: int, mx: int):
     return True
 
 
-
-def generateQRCode(link) :
-    """
-    generates qr code with link
-    """
-    qr = pyqrcode.create(link)
-    qr.show()
-
-
 def present_player_with_episode(m3u8_link: str):
     """
     starts player with m3u8 link
     """
-    player = configurations["media_player"]
-    if player == "iina-cli":
-        cli_command = f"unbuffer -p {player} '{m3u8_link}'"
+    media_player = configs["media_player"]
+    if media_player == "iina-cli":
+        cli_command = f"unbuffer -p {media_player} '{m3u8_link}'"
         os.system(cli_command)
     else:
-        cli_command = f"{player} --no-terminal \"{m3u8_link}\""
+        cli_command = f"{media_player} --no-terminal \"{m3u8_link}\""
         os.system(cli_command)
 
 
@@ -67,7 +55,7 @@ def show_table(elements: list, color1: str, color2: str):
 
 def main():
     os.system("")
-        
+    
     search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
     egybest_results = EgybestAPI.search(search_query)
@@ -129,12 +117,8 @@ def main():
         selected_result = episodes[int(enterd_episode) - 1]
         
         m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
-        if "-qr" in sys.argv :
-            generateQRCode(m3u8_link)
-        else :
-            present_player_with_episode(m3u8_link)
+        present_player_with_episode(m3u8_link)
         
-
     
             
         
@@ -168,10 +152,7 @@ def main():
         selected_result = episodes[int(enterd_episode) - 1]
         
         m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
-        if "-qr" in sys.argv :
-            generateQRCode(m3u8_link)
-        else :
-            present_player_with_episode(m3u8_link)
+        present_player_with_episode(m3u8_link)
         
     
         
@@ -182,7 +163,7 @@ def main():
     
 if __name__ == "__main__":
     try :
-        main()        
+        main()
     except KeyboardInterrupt:
         color_print("\n[*] - Exiting...", tcolors.WARNING)
         sys.exit(0)
