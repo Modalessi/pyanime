@@ -13,6 +13,7 @@ class Configurations :
                 self.config = yaml.load(config_file, Loader=yaml.FullLoader)
         except FileNotFoundError :
             color_print("[!] - Config file not found, creating new one.", tcolors.WARNING)
+            self.config = self._create_config_file()
             print("\n\n")
         
                 
