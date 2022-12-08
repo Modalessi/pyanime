@@ -9,6 +9,7 @@ from WebsiteAPIInterface import WebsiteAPIInterface
 
 class EgybestAPI(WebsiteAPIInterface) :
     
+    WEBSITE_NAME = "Egybest"
     BASE_URL = "https://aero.egybest.mba"
     HTML_PARSER = "html.parser"
 
@@ -36,12 +37,11 @@ class EgybestAPI(WebsiteAPIInterface) :
     
     
     
-    def is_movie(result) :
-        return not EgybestAPI.contains_seasons(result)
+    def is_movie(link) :
+        return not EgybestAPI.contains_seasons(link)
     
     
-    def contains_seasons(result) :
-        link = result["link"]
+    def contains_seasons(link) :
         result_page = requests.get(link)
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
@@ -58,8 +58,7 @@ class EgybestAPI(WebsiteAPIInterface) :
     
     
     
-    def get_seasons(result) :
-        link = result["link"]
+    def get_seasons(link) :
         result_page = requests.get(link)
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
@@ -90,8 +89,7 @@ class EgybestAPI(WebsiteAPIInterface) :
         
         
         
-    def get_episodes(result) :
-        link = result["link"]
+    def get_episodes(link) :
         result_page = requests.get(link)
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
@@ -122,8 +120,7 @@ class EgybestAPI(WebsiteAPIInterface) :
         
     
     
-    def get_m3u8_link(result) :
-        link = result["link"]
+    def get_m3u8_link(link) :
         result_page = requests.get(link)
         
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)

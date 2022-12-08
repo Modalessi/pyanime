@@ -9,6 +9,7 @@ from WebsiteAPIInterface import WebsiteAPIInterface
 
 class FaselhdAPI(WebsiteAPIInterface) :
     
+    WEBSITE_NAME = "FaselHD"
     HTML_PARSER = "html.parser"
     BASE_URL = "https://www.faselhd.club"
     
@@ -35,9 +36,8 @@ class FaselhdAPI(WebsiteAPIInterface) :
         return results
         
     
-    # takes a search result and returns if it is a movie or not
-    def is_movie(result) :
-        link = result["link"]
+    # takes a webpage link and returns if it is a movie or not
+    def is_movie(link) :
 
         result_page = requests.get(link)
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
@@ -47,9 +47,8 @@ class FaselhdAPI(WebsiteAPIInterface) :
         return episodes_div == None
         
         
-    # takes a search result and returnn a it have seasons or not
-    def contains_seasons(result) :
-        link = result["link"]
+    # takes a webpage link and returnn a it have seasons or not
+    def contains_seasons(link) :
         reqult_page = requests.get(link)
         soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
         seasons_div = soup.find("div", id="seasonList")
@@ -57,10 +56,9 @@ class FaselhdAPI(WebsiteAPIInterface) :
         return seasons_div != None
         
         
-    # takes a search result and returns a list of dictionaries with the seasons
+    # takes a webpage link and returns a list of dictionaries with the seasons
     # each season can be treated as a search result
-    def get_seasons(result) :
-        link = result["link"]
+    def get_seasons(link) :
 
         reqult_page = requests.get(link)
         soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
@@ -81,10 +79,9 @@ class FaselhdAPI(WebsiteAPIInterface) :
         return seasons
         
     
-    # takes a search result and returns a list of dictionaries with the episodes
+    # takes a webpage link and returns a list of dictionaries with the episodes
     # each episode can be treated as a search result
-    def get_episodes(result) :            
-        link = result["link"]
+    def get_episodes(link) :            
 
         reqult_page = requests.get(link)
         soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
@@ -104,14 +101,14 @@ class FaselhdAPI(WebsiteAPIInterface) :
         
     
     
-    def get_m3u8_link(result) :
+    def get_m3u8_link(link) :
         '''
         this method takes an episode or a movie and returns m3u8 link
         m3u8 link can then be passed to media player to play the video
         this is the worst function i have ever wrote
         '''
         
-        result_page = requests.get(result["link"])
+        result_page = requests.get(link)
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
         frames = soup.find_all("iframe")
         frame_link = ""

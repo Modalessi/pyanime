@@ -2,6 +2,8 @@
 class WebsiteAPIInterface() :
     # Interface for all WebsitesAPIs
     
+    # every website api needs to have constant contains the website name
+    WEBSITE_NAME = "WEBSITE_NAME"
     
     def search(query: str)-> list :
         '''
@@ -14,20 +16,20 @@ class WebsiteAPIInterface() :
         '''
     
     
-    def is_movie(result: dict)-> bool :
+    def is_movie(link: str)-> bool :
         '''
-        return wether the result is a movie or not
-        '''
-    
-    
-    def contains_seasons(result: dict)-> bool :
-        '''
-        return wether the result contains seasons or not
+        return wether the webpage link is a movie or not
         '''
     
     
+    def contains_seasons(link: str)-> bool :
+        '''
+        return wether the webpage contains seasons or not
+        '''
     
-    def get_seasons(result: dict)-> list :
+    
+    
+    def get_seasons(link: str)-> list :
         '''
         should return all seasons in a an array of dicts
         with the following format
