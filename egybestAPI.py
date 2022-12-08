@@ -76,12 +76,14 @@ class EgybestAPI(WebsiteAPIInterface) :
         
         seasons = []
         
+        index = 0
         for season_tag in seasons_tags :
             season = {}
             
             season["link"] = EgybestAPI.BASE_URL + season_tag["href"]
             season["title"] = season_tag.find("span", class_="title").text
-            
+            season["index"] = index
+            index += 1
             seasons.append(season)
             
         return seasons[::-1]
@@ -108,11 +110,14 @@ class EgybestAPI(WebsiteAPIInterface) :
         
         episodes = []
         
+        index = 0
         for episode_tag in episode_tags :
             episode = {}
             
             episode["link"] = EgybestAPI.BASE_URL + episode_tag["href"]
             episode["title"] = episode_tag.find("span", class_="title").text
+            episode["index"] = index
+            index += 1
             
             episodes.append(episode)
         

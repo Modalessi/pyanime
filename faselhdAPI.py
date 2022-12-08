@@ -67,6 +67,7 @@ class FaselhdAPI(WebsiteAPIInterface) :
         seasons_div = soup.find("div", id="seasonList")
         seasons_divs = seasons_div.find_all("div", class_="col-xl-2 col-lg-3 col-md-6")
 
+        index = 0
         for season_div in seasons_divs:
             base_url = "https://www.faselhd.pro/?p="
             season = {}
@@ -74,6 +75,8 @@ class FaselhdAPI(WebsiteAPIInterface) :
             season_id = season_div.find("div", class_="seasonDiv")["data-href"]
             season["link"] = base_url + season_id
             season["title"] = season_div.find("div", class_="seasonDiv").find("div", class_="title").text
+            season["index"] = index
+            index += 1
 
             seasons.append(season)
         return seasons
@@ -91,10 +94,13 @@ class FaselhdAPI(WebsiteAPIInterface) :
         episodes_div = soup.find("div", id="epAll")
         links = episodes_div.find_all("a")
 
+        index = 0
         for link in links:
             episode = {}
             episode["link"] = link["href"]
             episode["title"] = link.text.strip()
+            episode["index"] = index
+            index += 1
             episodes.append(episode)
 
         return episodes

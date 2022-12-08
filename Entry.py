@@ -1,5 +1,17 @@
 from WebsiteAPIInterface import WebsiteAPIInterface
-from EntryState import EntryState
+from enum import Enum
+from Player import start_player
+
+
+
+class EntryState(Enum) :
+    ASK_FOR_QUERY = 0
+    QUERY_SELECTED = 1
+    RESULT_SELECTED = 2
+    SEASON_SELECTED = 3
+    EPISODE_SELECTD = 4
+    PLAYING = 5
+
 
 class Entry :
 
@@ -12,9 +24,9 @@ class Entry :
         self.episodes = None
         self.selected_episode = None
         self.m3u8_link = None
-
+        self.player_process = None
         self.curr_link = self.link
-        self.entry_state = EntryState.ASK_FOR_QUERY
+        self.state = EntryState.ASK_FOR_QUERY
 
     
     def get_m3u8_link(self) :
@@ -30,6 +42,22 @@ class Entry :
         return self.episodes
 
 
+    def next_episode(self) :
+        if self.state == EntryState.PLAYING :
+            self.stop_playing()
+            self.selected_episode = self.episodes[self.selected_episode["index"] + 1]
+            self.set_episode_selected(self.selected_episode)
+            self.get_m3u8_link()
+            self.set_playing()
+    
+    def previous_episode(self) :
+        if self.state == EntryState.PLAYING :
+            self.stop_playing()
+            self.selected_episode = self.episodes[self.selected_episode["index"] - 1]
+            self.set_episode_selected(self.selected_episode)
+            self.get_m3u8_link()
+            self.set_playing()
+
     def set_query_selected(self, title: str, link: str, source: WebsiteAPIInterface) :
         self.title = title
         self.link = link
@@ -37,21 +65,29 @@ class Entry :
         self.is_movie = self.source.is_movie(link)
         self.contains_seasons = self.source.contains_seasons(link)
         self.curr_link = link
-        self.entry_state = EntryState.QUERY_SELECTED
+        self.state = EntryState.QUERY_SELECTED
 
     def set_season_selected(self, selected_season: dict) :
         self.selected_season = selected_season
         self.curr_link = selected_season["link"]
-        self.entry_state = EntryState.SEASON_SELECTED
+        self.state = EntryState.SEASON_SELECTED
     
     def set_episode_selected(self, selected_episode: dict) :
         self.selected_episode = selected_episode
         self.curr_link = selected_episode["link"]
-        self.entry_state = EntryState.EPISODE_SELECTD
+        self.state = EntryState.EPISODE_SELECTD
     
     def set_playing(self) :
-        self.entry_state = EntryState.PLAYING
-    
+        self.curr_link = self.m3u8_link
+        self.player_process = start_player(self)
+        self.state = EntryState.PLAYING
+
+    def stop_playing(self) :
+        self.player_process.kill()
+        self.player_process = None
+        self.revers_state()
+
+
     def is_movie(self) :
         return self.source.is_movie(self.curr_link)
 
@@ -59,21 +95,21 @@ class Entry :
         return self.source.contains_seasons(self.curr_link)
 
     def revers_state(self) :
-        if self.entry_state == EntryState.EPISODE_SELECTD :
+        if self.state == EntryState.EPISODE_SELECTD :
             self.selected_episode = None
             self.curr_link = self.selected_season["link"]
-            self.entry_state = EntryState.SEASON_SELECTED
-        elif self.entry_state == EntryState.SEASON_SELECTED :
+            self.state = EntryState.SEASON_SELECTED
+        elif self.state == EntryState.SEASON_SELECTED :
             self.selected_season = None
             self.curr_link = self.link
-            self.entry_state = EntryState.RESULT_SELECTED
-        elif self.entry_state == EntryState.PLAYING :
+            self.state = EntryState.RESULT_SELECTED
+        elif self.state == EntryState.PLAYING :
             self.m3u8_link = None
             self.curr_link = self.selected_season["link"] if self.selected_season else self.link
-            self.entry_state = EntryState.SEASON_SELECTED if self.selected_season else EntryState.RESULT_SELECTED
+            self.state = EntryState.SEASON_SELECTED if self.selected_season else EntryState.RESULT_SELECTED
     
     def get_state(self) :
-        return self.entry_state
+        return self.state
     
     def __str__(self) :
-        return f"Title: {self.title}\nLink: {self.link}\nSource: {self.source}\nIs Movie: {self.is_movie}\nContains Seasons: {self.contains_seasons}\nSeasons: {self.seasons}\nSelected Season: {self.selected_season}\nEpisodes: {self.episodes}\nSelected Episode: {self.selected_episode}\nM3U8 Link: {self.m3u8_link}\nEntry State: {self.entry_state}"
+        return f"Title: {self.title}\nLink: {self.link}\nSource: {self.source}\nIs Movie: {self.is_movie}\nContains Seasons: {self.contains_seasons}\nSeasons: {self.seasons}\nSelected Season: {self.selected_season}\nEpisodes: {self.episodes}\nSelected Episode: {self.selected_episode}\nM3U8 Link: {self.m3u8_link}\nEntry State: {self.state}"

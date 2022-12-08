@@ -36,6 +36,7 @@ class WebsiteAPIInterface() :
         {
             "title of the season" : str
             "link" : str
+            "index" : int
         }
         '''
         
@@ -49,6 +50,7 @@ class WebsiteAPIInterface() :
         {
             "title of the episode" : str
             "link" : str
+            "index" : int
         }
         '''
         

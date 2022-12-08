@@ -1,8 +1,7 @@
 import os
 import sys
 
-from Entry import Entry
-from EntryState import EntryState
+from Entry import Entry, EntryState
 from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
@@ -23,22 +22,9 @@ def input_is_valid(n, mn: int, mx: int):
         if n < mn or n > mx:
             return False
     else:
-        return True if n.lowercase() == "b" else False
+        return False
 
     return True
-
-
-def present_player_with_episode(m3u8_link: str):
-    """
-    starts player with m3u8 link
-    """ 
-    media_player = configs["media_player"]
-    if media_player == "iina-cli":
-        cli_command = f"unbuffer -p {media_player} '{m3u8_link}'"
-        os.system(cli_command)
-    else:
-        cli_command = f"{media_player} --no-terminal \"{m3u8_link}\""
-        os.system(cli_command)
 
 
 def show_table(elements: list, color1: str, color2: str):
@@ -82,13 +68,26 @@ def ask_for_search_query()-> list :
 
 def ask_for_selection(results: list)-> dict :
     show_table([result["title"] for result in results], tcolors.OKBLUE, tcolors.OKCYAN)
-    enterd_choice = color_input("[*] - Enter choice (b to go back): ", tcolors.OKGREEN)
+    enterd_choice = color_input("[*] - Enter choice: ", tcolors.OKGREEN)
     
     if not input_is_valid(enterd_choice, 1, len(results)):
         color_print("[-] - Invalid choice.", tcolors.FAIL)
-        # TODO: Make Custom Exception and throw it
+        raise Exception("Invalid choice")
+
     
-    return None if enterd_choice.lower() == "b" else results[int(enterd_choice) - 1]
+    selected_result = results[int(enterd_choice) - 1]
+    return selected_result
+ 
+
+def show_player_options(curr_ep: int, total_eps: int) :
+    player_options = "\n\n"
+    player_options += tcolors.OKGREEN + "[n] - Next Episode" + tcolors.ENDC if curr_ep < total_eps else ""
+    player_options += tcolors.OKBLUE + "\n[p] - Previous Episode" + tcolors.ENDC if curr_ep > 1 else ""
+    player_options += tcolors.OKCYAN + "\n[s] - Select Episode" + tcolors.ENDC
+    player_options += tcolors.OKCYAN + "\n[q] - Quit" + tcolors.ENDC
+
+    player_options += tcolors.OKCYAN + "\n\nEnter option: " + tcolors.ENDC
+    return color_input(player_options, tcolors.OKCYAN)
 
 
 def main():
@@ -100,32 +99,44 @@ def main():
 
     exit = False
 
-    search_results = ask_for_search_query()
-    selected_result = ask_for_selection(search_results)
-    entry.set_query_selected(selected_result["title"], selected_result["link"], selected_result["source"])
+    while not exit :
+        if entry.state == EntryState.ASK_FOR_QUERY :
+            search_results = ask_for_search_query()
+            selected_result = ask_for_selection(search_results)
+            entry.set_query_selected(selected_result["title"], selected_result["link"], selected_result["source"])
     
+        if entry.state == EntryState.QUERY_SELECTED :
+            if entry.is_movie : 
+                entry.get_m3u8_link()
+                entry.set_playing()
+    
+            if entry.contains_seasons :
+                seasons = entry.get_seasons()
+                selected_season = ask_for_selection(seasons)
+                entry.set_season_selected(selected_season)
 
-    if entry.is_movie :
-        m3u8_link = entry.get_m3u8_link()
-        present_player_with_episode(m3u8_link)
-        return
-    
-    if entry.contains_seasons :
-        seasons = entry.get_seasons()
-        selected_season = ask_for_selection(seasons)
-        entry.set_season_selected(selected_season)
-    
-    episodes = entry.get_episodes()
-    selected_episode = ask_for_selection(episodes)
-    entry.set_episode_selected(selected_episode)
-    
-    m3u8_link = entry.get_m3u8_link()
-    present_player_with_episode(m3u8_link)
-        
-    
+        if entry.state in [EntryState.SEASON_SELECTED, EntryState.QUERY_SELECTED] :
+            episodes = entry.get_episodes()
+            selected_episode = ask_for_selection(episodes)
+            entry.set_episode_selected(selected_episode)
+
+            entry.get_m3u8_link()
+            entry.set_playing()
+
+        if entry.state == EntryState.PLAYING :
+            option = show_player_options(entry.selected_episode["index"] + 1, len(entry.episodes))
+
+        if option.lower() == "n":
+            entry.next_episode()
+        elif option.lower() == "p":
+            entry.previous_episode()
+        elif option.lower() == "s":
+            entry.revers_state()
+        elif option.lower() == "q":
+            exit = True
         
 
-    
+
 if __name__ == "__main__":
     try :
         main()
