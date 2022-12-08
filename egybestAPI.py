@@ -131,7 +131,6 @@ class EgybestAPI(WebsiteAPIInterface) :
         soup = BeautifulSoup(result_page.content, EgybestAPI.HTML_PARSER)
         
         frame_link = EgybestAPI.BASE_URL + soup.find("iframe", class_="auto-size")["src"]
-        print("frame link", frame_link)
         
         driver = SeleniumHandler().driver
         driver.get(frame_link)

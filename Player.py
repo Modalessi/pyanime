@@ -3,7 +3,12 @@ from Configurations import Configurations
 
 def start_player(entry) :
 
-    media_title = entry.title + " - " + entry.selected_episode["title"]
+    if entry.selected_episode :
+        media_title = entry.title + " - " + entry.selected_episode["title"]
+    elif entry.is_movie :
+        media_title = entry.title 
+    else :
+        raise Exception("entry is not a movie or an episode")
 
     if Configurations().config["media_player"] in ["mpv", "iina"] :
         player_command = [

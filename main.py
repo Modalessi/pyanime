@@ -6,7 +6,6 @@ from egybestAPI import EgybestAPI
 from faselhdAPI import FaselhdAPI
 from terminalColors import *
 from Configurations import Configurations
-from WebsiteAPIInterface import WebsiteAPIInterface
 
 configs = Configurations().config
 
@@ -83,7 +82,8 @@ def show_player_options(curr_ep: int, total_eps: int) :
     player_options = "\n\n"
     player_options += tcolors.OKGREEN + "[n] - Next Episode" + tcolors.ENDC if curr_ep < total_eps else ""
     player_options += tcolors.OKBLUE + "\n[p] - Previous Episode" + tcolors.ENDC if curr_ep > 1 else ""
-    player_options += tcolors.OKCYAN + "\n[s] - Select Episode" + tcolors.ENDC
+    player_options += tcolors.OKCYAN + "\n[e] - Select Episode" + tcolors.ENDC if total_eps > 1 else ""
+    player_options += tcolors.OKCYAN + "\n[s] - Search" + tcolors.ENDC
     player_options += tcolors.OKCYAN + "\n[q] - Quit" + tcolors.ENDC
 
     player_options += tcolors.OKCYAN + "\n\nEnter option: " + tcolors.ENDC
@@ -124,14 +124,19 @@ def main():
             entry.set_playing()
 
         if entry.state == EntryState.PLAYING :
-            option = show_player_options(entry.selected_episode["index"] + 1, len(entry.episodes))
+            if entry.is_movie :
+                option = show_player_options(1, 1)
+            else :
+                option = show_player_options(entry.selected_episode["index"] + 1, len(entry.episodes))
 
         if option.lower() == "n":
             entry.next_episode()
         elif option.lower() == "p":
             entry.previous_episode()
-        elif option.lower() == "s":
+        elif option.lower() == "e":
             entry.revers_state()
+        elif option.lower() == "s":
+            entry = Entry()
         elif option.lower() == "q":
             exit = True
         

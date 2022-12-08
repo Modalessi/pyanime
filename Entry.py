@@ -87,10 +87,6 @@ class Entry :
         self.player_process = None
         self.revers_state()
 
-
-    def is_movie(self) :
-        return self.source.is_movie(self.curr_link)
-
     def contains_seasons(self) :
         return self.source.contains_seasons(self.curr_link)
 
