@@ -1,12 +1,12 @@
 import os
 import sys
 
-from Entry import Entry, EntryState
+from entry import Entry, EntryState
 from egybest_api import EgybestAPI
 from faselhd_api import FaselhdAPI
 from terminal_colors import TerminalColors as tcolors
 from terminal_colors import color_input, color_print
-from Configurations import Configurations
+from configurations import Configurations
 
 configs = Configurations().config
 
