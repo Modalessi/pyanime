@@ -1,4 +1,7 @@
-class tcolors:
+class TerminalColors:
+    '''
+    terminal colors codes
+    '''
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
@@ -8,12 +11,13 @@ class tcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-    
+
+
 def color_print(text, color):
-    print(color + text + tcolors.ENDC)
-    
+    print(color + text + TerminalColors.ENDC)
+
+
 def color_input(text, color):
-    print(color + text + tcolors.ENDC, end = "")
+    print(color + text + TerminalColors.ENDC, end="")
     user_input = input()
     return user_input
-    

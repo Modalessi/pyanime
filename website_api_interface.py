@@ -42,7 +42,7 @@ class WebsiteAPIInterface():
         '''
 
     @staticmethod
-    def get_episodes(result: dict) -> list:
+    def get_episodes(link: dict) -> list:
         '''
         should return all episodes in a an array of dicts
         with the following format
@@ -54,7 +54,7 @@ class WebsiteAPIInterface():
         '''
 
     @staticmethod
-    def get_m3u8_link(result: dict) -> str:
+    def get_m3u8_link(link: dict) -> str:
         '''
         should return m3u8 link for an episode or a movie
         in order to pass to a media player

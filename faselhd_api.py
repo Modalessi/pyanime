@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from SeleniumHandler import SeleniumHandler
-from WebsiteAPIInterface import WebsiteAPIInterface
+from website_api_interface import WebsiteAPIInterface
 
 
 class FaselhdAPI(WebsiteAPIInterface):
