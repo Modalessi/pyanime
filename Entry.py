@@ -1,6 +1,6 @@
 from enum import Enum
 from website_api_interface import WebsiteAPIInterface
-from Player import start_player
+from player import start_player
 
 
 class EntryState(Enum):

@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from SeleniumHandler import SeleniumHandler
+from selenium_handler import SeleniumHandler
 from website_api_interface import WebsiteAPIInterface
 
 

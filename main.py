@@ -4,22 +4,22 @@ import sys
 from entry import Entry, EntryState
 from egybest_api import EgybestAPI
 from faselhd_api import FaselhdAPI
-from terminal_colors import TerminalColors as tcolors
+from terminal_colors import TerminalColors as tcolors 
 from terminal_colors import color_input, color_print
 from configurations import Configurations
 
 configs = Configurations().config
 
 
-def input_is_valid(n, mn: int, mx: int):
+def input_is_valid(num, minimum: int, maximum: int):
     """
     Checks if input in valid.
     input is valid if it is in range [mn, mx]
     """
 
-    if n.isdigit():
-        n = int(n)
-        if n < mn or n > mx:
+    if num.isdigit():
+        num = int(num)
+        if num < minimum or num > maximum:
             return False
     else:
         return False
@@ -85,7 +85,7 @@ def show_player_options(curr_ep: int, total_eps: int):
     player_options += tcolors.OKCYAN + \
         "\n[e] - Select Episode" + tcolors.ENDC if total_eps > 1 else ""
     player_options += tcolors.OKCYAN + "\n[s] - Search" + tcolors.ENDC
-    player_options += tcolors.OKCYAN + "\n[q] - Quit" + tcolors.ENDC
+    player_options += tcolors.OKCYAN + "\n[q] - quit" + tcolors.ENDC
 
     player_options += tcolors.OKCYAN + "\n\nEnter option: " + tcolors.ENDC
     return color_input(player_options, tcolors.OKCYAN)
@@ -98,9 +98,9 @@ def main():
 
     entry = Entry()
 
-    exit = False
+    exit_app = False
 
-    while not exit:
+    while not exit_app:
         if entry.state == EntryState.ASK_FOR_QUERY:
             search_results = ask_for_search_query()
             selected_result = ask_for_selection(search_results)
@@ -141,12 +141,12 @@ def main():
         elif option.lower() == "s":
             entry = Entry()
         elif option.lower() == "q":
-            exit = True
+            exit_app = True
 
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        color_print("\n[*] - Exiting...", tcolors.WARNING)
-        sys.exit(0)
+        color_print("\n[*] - exiting...", tcolors.WARNING)
+        sys.exit_app(0)

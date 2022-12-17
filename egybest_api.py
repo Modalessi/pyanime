@@ -1,7 +1,7 @@
 import time
 from bs4 import BeautifulSoup
 import requests
-from SeleniumHandler import SeleniumHandler
+from selenium_handler import SeleniumHandler
 from website_api_interface import WebsiteAPIInterface
 
 
