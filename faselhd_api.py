@@ -12,7 +12,7 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     WEBSITE_NAME = "FaselHD"
     HTML_PARSER = "html.parser"
-    BASE_URL = "https://www.faselhd.club"
+    BASE_URL = "https://go.faselhd.cloud"
 
     @staticmethod
     def search(query):

@@ -46,11 +46,11 @@ def show_table(elements: list, color1: str, color2: str):
 def ask_for_search_query() -> list:
     search_query = color_input("[*] - Enter search query : ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
-    egybest_results = EgybestAPI.search(search_query)
+    # egybest_results = EgybestAPI.search(search_query)
 
     results = []
 
-    for result in faselhd_results + egybest_results:
+    for result in faselhd_results : # + egybest_results:
         if result in faselhd_results:
             result["source"] = FaselhdAPI
             result["title"] = f'[{result["source"].WEBSITE_NAME}] {result["title"]}'
@@ -149,4 +149,4 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         color_print("\n[*] - exiting...", tcolors.WARNING)
-        sys.exit_app(0)
+        sys.exit(0)

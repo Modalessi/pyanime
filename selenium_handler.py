@@ -15,7 +15,6 @@ class SeleniumHandler:
 
         self.caps = DesiredCapabilities.CHROME
         self.caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--headless')
         self.options.add_argument('--disable-gpu')
@@ -29,7 +28,7 @@ class SeleniumHandler:
                 self.service = Service(self.driver_path)
                 self.driver = webdriver.Chrome(
                     service=self.service, options=self.options, desired_capabilities=self.caps)
-        except common.exceptions.SessionNotCreatedException:
+        except common.exceptions.SessionNotCreatedException as err:
             error_msg = '''
             Could not open chrome session please check the following
             1. Make sure you have chrome installed
@@ -38,7 +37,9 @@ class SeleniumHandler:
             4. if the path is global make sure you have the driver in your system path
             5. if you still have problems you are welcome to open an issue on github
             '''
-        except common.exceptions.WebDriverException:
+            color_print(error_msg, tcolors.FAIL)
+            color_print(err.msg, tcolors.FAIL)
+        except common.exceptions.WebDriverException as err:
             error_msg = '''
             Could not open chrome session please check the following
             1. Make sure you have the correct driver path in the config file
@@ -46,5 +47,6 @@ class SeleniumHandler:
             3. if you still have problems you are welcome to open an issue on github
             '''
             color_print(error_msg, tcolors.FAIL)
+            color_print(err.msg, tcolors.FAIL)
             sys.exit(1)
             
