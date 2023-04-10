@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 from selenium_handler import SeleniumHandler
 from website_api_interface import WebsiteAPIInterface
@@ -12,7 +13,7 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     WEBSITE_NAME = "FaselHD"
     HTML_PARSER = "html.parser"
-    BASE_URL = "https://go.faselhd.cloud"
+    BASE_URL = "https://www.faselhd.ac"
 
     @staticmethod
     def search(query):
@@ -73,8 +74,8 @@ class FaselhdAPI(WebsiteAPIInterface):
         each season can be treated as a search result
         '''
 
-        reqult_page = requests.get(link, timeout=1000)
-        soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
+        result_page = requests.get(link, timeout=1000)
+        soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         seasons = []
         seasons_div = soup.find("div", id="seasonList")
@@ -83,11 +84,11 @@ class FaselhdAPI(WebsiteAPIInterface):
 
         index = 0
         for season_div in seasons_divs:
-            base_url = "https://www.faselhd.pro/?p="
+            base_url =  FaselhdAPI.BASE_URL + "/?p="
             season = {}
 
-            season_id = season_div.find("div", class_="seasonDiv")["data-href"]
-            season["link"] = base_url + season_id
+            season_id = re.search(r"\?p=(\d+)", season_div.find("div", class_="seasonDiv")["onclick"]).group(1)
+            season["link"] = base_url + str(season_id)
             season["title"] = season_div.find(
                 "div", class_="seasonDiv").find("div", class_="title").text
             season["index"] = index
@@ -103,8 +104,9 @@ class FaselhdAPI(WebsiteAPIInterface):
         each episode can be treated as a search result
         '''
 
-        reqult_page = requests.get(link, timeout=1000)
-        soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
+
+        result_page = requests.get(link, timeout=1000)
+        soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         episodes = []
 
