@@ -99,7 +99,7 @@ def main():
     entry = Entry()
 
     exit_app = False
-
+    option = ""
     while not exit_app:
         if entry.state == EntryState.ASK_FOR_QUERY:
             search_results = ask_for_search_query()
