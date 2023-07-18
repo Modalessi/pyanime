@@ -3,6 +3,10 @@ import re
 from bs4 import BeautifulSoup
 from selenium_handler import SeleniumHandler
 from website_api_interface import WebsiteAPIInterface
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 
 
 class FaselhdAPI(WebsiteAPIInterface):
@@ -132,29 +136,43 @@ class FaselhdAPI(WebsiteAPIInterface):
         this is the worst function i have ever wrote
         '''
 
-        result_page = requests.get(link, timeout=1000)
+        try:
+            result_page = requests.get(link, timeout=1000)
+        except requests.RequestException as e:
+            print(f"Error: {e}")
+            return None
+    
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
-        frames = soup.find_all("iframe")
-        frame_link = ""
-        for frame in frames:
-            if frame["name"] == "player_iframe":
-                frame_link = frame["src"]
-                break
+        frame = soup.find("iframe", {"name": "player_iframe"})
+        if not frame:
+            print("Error: player_iframe not found")
+            return None
+
+        frame_link = frame["src"]
+
 
         driver = SeleniumHandler().driver
         driver.get(frame_link)
 
-        html_generated = False
+        try:
+            driver.get(frame_link)
 
-        while not html_generated:
+            wait = WebDriverWait(driver, 10)  # wait up to 10 seconds
+            # wait until a button with class "hd_btn" is present
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "button.hd_btn")))
+
             soup = BeautifulSoup(driver.page_source, FaselhdAPI.HTML_PARSER)
             buttons = soup.find_all("button", class_="hd_btn")
-            try:
+            if buttons:
                 buttons.pop(0)
                 buttons.sort(key=lambda x: int(x.text[:-1]))
-                html_generated = True
-            except IndexError:
-                continue
+                return buttons[-1]["data-url"]
 
-        driver.close()
-        return buttons[-1]["data-url"]
+        except Exception as e:
+            print(f"Error: {e}")
+
+        finally:
+            driver.close()
+
+        print("Error: Unable to generate m3u8 link")
+        return None
