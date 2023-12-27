@@ -94,122 +94,6 @@ def show_player_options(curr_ep: int, total_eps: int):
 
 
 def main():
-<<<<<<< HEAD
-    os.system("")
-        
-    search_query = color_input("[*] - Enter search query: ", tcolors.OKGREEN)
-    faselhd_results = FaselhdAPI.search(search_query)
-    egybest_results = EgybestAPI.search(search_query)
-    
-    results = []
-    
-    for i ,result in enumerate(faselhd_results + egybest_results) :
-        if result in faselhd_results :
-            result["source"] = "faselhd"
-        else :
-            result["source"] = "egybest"
-            
-        color_print(f"{i + 1} - [{result['source']}] {result['title']}", tcolors.OKBLUE if result["source"] == "faselhd" else tcolors.OKCYAN)
-        
-        results.append(result)
-    
-    
-    if len(results) == 0 :
-        color_print("[-] - No results found.", tcolors.FAIL)
-        return
-    
-    
-    enterd_choice = color_input("[*] - Enter choice: ", tcolors.OKGREEN)
-    
-    if not input_is_valid(enterd_choice, 1, len(results)):
-        color_print("[-] - Invalid choice.", tcolors.FAIL)
-        return
-    
-    selected_result = results[int(enterd_choice) - 1]
-    
-    if selected_result["source"] == "faselhd":
-        
-        if FaselhdAPI.is_movie(selected_result) :
-            m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
-            present_player_with_episode(m3u8_link)
-            return
-        
-        if FaselhdAPI.contains_seasons(selected_result) :
-            seasons = FaselhdAPI.get_seasons(selected_result)
-            show_table([season["title"] for season in seasons], tcolors.OKBLUE, tcolors.OKCYAN)
-            
-            enterd_season = color_input("[*] - Enter season: ", tcolors.OKGREEN)
-            
-            if not input_is_valid(enterd_season, 1, len(seasons)):
-                color_print("[-] - Invalid season.", tcolors.FAIL)
-                return
-            
-            selected_result = seasons[int(enterd_season) - 1]
-        
-        episodes = FaselhdAPI.get_episodes(selected_result)
-        show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
-        
-        enterd_episode = color_input("[*] - Enter episode: ", tcolors.OKGREEN)
-        
-        if not input_is_valid(enterd_episode, 1, len(episodes)):
-            color_print("[-] - Invalid episode.", tcolors.FAIL)
-            return
-        
-        selected_result = episodes[int(enterd_episode) - 1]
-        
-        m3u8_link = FaselhdAPI.get_m3u8_link(selected_result)
-        if "-qr" in sys.argv :
-            generateQRCode(m3u8_link)
-        else :
-            present_player_with_episode(m3u8_link)
-        
-    
-    
-            
-        
-    elif selected_result["source"] == "egybest" :
-        if EgybestAPI.is_movie(selected_result) :
-            m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
-            present_player_with_episode(m3u8_link)
-            return
-        
-        if EgybestAPI.contains_seasons(selected_result) :
-            seasons = EgybestAPI.get_seasons(selected_result)
-            show_table([season["title"] for season in seasons], tcolors.OKBLUE, tcolors.OKCYAN)
-            
-            enterd_season = color_input("[*] - Enter season: ", tcolors.OKGREEN)
-            
-            if not input_is_valid(enterd_season, 1, len(seasons)):
-                color_print("[-] - Invalid season.", tcolors.FAIL)
-                return
-            
-            selected_result = seasons[int(enterd_season) - 1]
-        
-        episodes = EgybestAPI.get_episodes(selected_result)
-        show_table([episode["title"] for episode in episodes], tcolors.OKBLUE, tcolors.OKCYAN)
-        
-        enterd_episode = color_input("[*] - Enter episode: ", tcolors.OKGREEN)
-        
-        if not input_is_valid(enterd_episode, 1, len(episodes)):
-            color_print("[-] - Invalid episode.", tcolors.FAIL)
-            return
-        
-        selected_result = episodes[int(enterd_episode) - 1]
-        
-        m3u8_link = EgybestAPI.get_m3u8_link(selected_result)
-        if "-qr" in sys.argv :
-            generateQRCode(m3u8_link)
-        else :
-            present_player_with_episode(m3u8_link)
-        
-    
-        
-        
-    
-    
-    
-    
-=======
 
     # show colors in windows cmd
     os.system("")
@@ -262,7 +146,6 @@ def main():
             exit_app = True
 
 
->>>>>>> refactoring
 if __name__ == "__main__":
     try:
         main()
