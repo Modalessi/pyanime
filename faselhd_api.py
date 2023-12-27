@@ -1,6 +1,7 @@
 import requests
 import re
 from bs4 import BeautifulSoup
+from bs4 import element
 from selenium_handler import SeleniumHandler
 from website_api_interface import WebsiteAPIInterface
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,7 +18,7 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     WEBSITE_NAME = "FaselHD"
     HTML_PARSER = "html.parser"
-    BASE_URL = "https://www.faselhd.ac"
+    BASE_URL = "https://web1.faselhd.reisen:2096"
 
     @staticmethod
     def search(query):
@@ -30,11 +31,12 @@ class FaselhdAPI(WebsiteAPIInterface):
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         animes_div = soup.find("div", id="postList")
-        animes = animes_div.find_all(
-            "div", class_="col-xl-2 col-lg-2 col-md-3 col-sm-3")
+        animes = []
+        if animes_div is not None and isinstance(animes_div, element.Tag) :
+            animes = animes_div.find_all(
+                "div", class_="col-xl-2 col-lg-2 col-md-3 col-sm-3")
 
         results = []
-
         for anime_div in animes:
             post_div = anime_div.find("div", class_="postDiv").find("a")
             result = {}
@@ -166,6 +168,7 @@ class FaselhdAPI(WebsiteAPIInterface):
             if buttons:
                 buttons.pop(0)
                 buttons.sort(key=lambda x: int(x.text[:-1]))
+                print(buttons[-1]["data-url"])
                 return buttons[-1]["data-url"]
 
         except Exception as e:

@@ -4,6 +4,7 @@ import sys
 from entry import Entry, EntryState
 from egybest_api import EgybestAPI
 from faselhd_api import FaselhdAPI
+from witanime_api import WitAnimeAPI
 from terminal_colors import TerminalColors as tcolors 
 from terminal_colors import color_input, color_print
 from configurations import Configurations
@@ -46,11 +47,12 @@ def show_table(elements: list, color1: str, color2: str):
 def ask_for_search_query() -> list:
     search_query = color_input("[*] - Enter search query : ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
+    # witanime_results = WitAnimeAPI.search(search_query)
     # egybest_results = EgybestAPI.search(search_query)
 
     results = []
 
-    for result in faselhd_results : # + egybest_results:
+    for result in faselhd_results: # + egybest_results:
         if result in faselhd_results:
             result["source"] = FaselhdAPI
             result["title"] = f'[{result["source"].WEBSITE_NAME}] {result["title"]}'
