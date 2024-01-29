@@ -12,7 +12,7 @@ class WebsiteAPIInterface():
         search for a query in the website and return results in a list of dicts
         with the following format
         {
-            "title of the result" : str
+            "title " : str
             "link" : str
         }
         '''
