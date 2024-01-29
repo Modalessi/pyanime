@@ -18,7 +18,7 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     WEBSITE_NAME = "FaselHD"
     HTML_PARSER = "html.parser"
-    BASE_URL = "https://web1.faselhd-watch.motorcycles"
+    BASE_URL = "https://web1.faselhd-watch.pics"
 
     @staticmethod
     def search(query):
