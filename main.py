@@ -42,7 +42,7 @@ def show_table(elements: list, color1: str, color2: str):
             color_print(f"[{index + 1}] {element}", color2)
 
 
-def ask_for_search_query() -> list:
+def search_for_query() -> list:
     search_query = color_input("[*] - Enter search query : ", tcolors.OKGREEN)
     faselhd_results = FaselhdAPI.search(search_query)
 
@@ -96,7 +96,10 @@ def main():
     option = ""
     while not exit_app:
         if entry.state == EntryState.ASK_FOR_QUERY:
-            search_results = ask_for_search_query()
+            search_results = search_for_query()
+            if len(search_results) == 0:
+                color_print("[-] - No results", tcolors.FAIL)
+                continue
             selected_result = ask_for_selection(search_results)
             entry.set_query_selected(
                 selected_result["title"], selected_result["link"], selected_result["source"])
