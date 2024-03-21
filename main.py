@@ -1,6 +1,6 @@
 import os
 import sys
-
+import argparse
 from entry import Entry, EntryState
 from faselhd_api import FaselhdAPI
 from terminal_colors import TerminalColors as tcolors 
@@ -8,6 +8,12 @@ from terminal_colors import color_input, color_print
 from configurations import Configurations
 
 configs = Configurations().config
+arg_parser = argparse.ArgumentParser(description="a cli tool to watch animes, tv shows and movies for free and without ads ;) it does it by scrapping Faselhd")
+arg_parser.add_argument("-g", "--gui", action="store_true", help="use to laucnh a gui version of the app")
+
+
+gui_run = arg_parser.parse_args().gui
+print(gui_run)
 
 
 def input_is_valid(num, minimum: int, maximum: int):
