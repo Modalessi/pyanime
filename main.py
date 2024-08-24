@@ -3,17 +3,18 @@ import sys
 import argparse
 from entry import Entry, EntryState
 from faselhd_api import FaselhdAPI
-from terminal_colors import TerminalColors as tcolors 
+from terminal_colors import TerminalColors as tcolors
 from terminal_colors import color_input, color_print
 from configurations import Configurations
 
 configs = Configurations().config
-arg_parser = argparse.ArgumentParser(description="a cli tool to watch animes, tv shows and movies for free and without ads ;) it does it by scrapping Faselhd")
+arg_parser = argparse.ArgumentParser(
+    description="a cli tool to watch animes, tv shows and movies for free and without ads ;) it does it by scrapping Faselhd"
+)
 arg_parser.add_argument("-g", "--gui", action="store_true", help="use to laucnh a gui version of the app")
 
 
 gui_run = arg_parser.parse_args().gui
-print(gui_run)
 
 
 def input_is_valid(num, minimum: int, maximum: int):
@@ -54,18 +55,17 @@ def search_for_query() -> list:
 
     results = []
 
-    for result in faselhd_results: 
+    for result in faselhd_results:
         result["source"] = FaselhdAPI
         result["title"] = f'[{result["source"].WEBSITE_NAME}] {result["title"]}'
-        
+
         results.append(result)
 
     return results
 
 
 def ask_for_selection(results: list) -> dict:
-    show_table([result["title"]
-               for result in results], tcolors.OKBLUE, tcolors.OKCYAN)
+    show_table([result["title"] for result in results], tcolors.OKBLUE, tcolors.OKCYAN)
     enterd_choice = color_input("[*] - Enter choice: ", tcolors.OKGREEN)
 
     if not input_is_valid(enterd_choice, 1, len(results)):
@@ -78,12 +78,9 @@ def ask_for_selection(results: list) -> dict:
 
 def show_player_options(curr_ep: int, total_eps: int):
     player_options = "\n\n"
-    player_options += tcolors.OKGREEN + \
-        "[n] - Next Episode" + tcolors.ENDC if curr_ep < total_eps else ""
-    player_options += tcolors.OKBLUE + \
-        "\n[p] - Previous Episode" + tcolors.ENDC if curr_ep > 1 else ""
-    player_options += tcolors.OKCYAN + \
-        "\n[e] - Select Episode" + tcolors.ENDC if total_eps > 1 else ""
+    player_options += tcolors.OKGREEN + "[n] - Next Episode" + tcolors.ENDC if curr_ep < total_eps else ""
+    player_options += tcolors.OKBLUE + "\n[p] - Previous Episode" + tcolors.ENDC if curr_ep > 1 else ""
+    player_options += tcolors.OKCYAN + "\n[e] - Select Episode" + tcolors.ENDC if total_eps > 1 else ""
     player_options += tcolors.OKCYAN + "\n[s] - Search" + tcolors.ENDC
     player_options += tcolors.OKCYAN + "\n[q] - quit" + tcolors.ENDC
 
@@ -107,8 +104,7 @@ def main():
                 color_print("[-] - No results", tcolors.FAIL)
                 continue
             selected_result = ask_for_selection(search_results)
-            entry.set_query_selected(
-                selected_result["title"], selected_result["link"], selected_result["source"])
+            entry.set_query_selected(selected_result["title"], selected_result["link"], selected_result["source"])
 
         if entry.state == EntryState.QUERY_SELECTED:
             if entry.is_movie:
@@ -132,8 +128,7 @@ def main():
             if entry.is_movie:
                 option = show_player_options(1, 1)
             else:
-                option = show_player_options(
-                    entry.selected_episode["index"] + 1, len(entry.episodes))
+                option = show_player_options(entry.selected_episode["index"] + 1, len(entry.episodes))
 
         if option.lower() == "n":
             entry.next_episode()

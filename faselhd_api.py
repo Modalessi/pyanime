@@ -1,40 +1,38 @@
-import requests
 import re
-from bs4 import BeautifulSoup
-from bs4 import element
-from selenium_handler import SeleniumHandler
-from website_api_interface import WebsiteAPIInterface
-from selenium.webdriver.support.ui import WebDriverWait
+
+import requests
+from bs4 import BeautifulSoup, element
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
+
+from selenium_handler import SeleniumHandler
+from website_api_interface import WebsiteAPIInterface
 
 
 class FaselhdAPI(WebsiteAPIInterface):
-    '''
+    """
     FaselhdAPI confirms to WebsiteAPIInterface
     it proviedes an interface to search and pull data from faselhd website
-    '''
+    """
 
     WEBSITE_NAME = "FaselHD"
     HTML_PARSER = "html.parser"
-    BASE_URL = "https://web1.faselhd-watch.shop"
+    BASE_URL = "https://web1.faselhd1watch.icu"
 
     @staticmethod
     def search(query):
-        '''
+        """
         Takes a query to search in fasel hd website and returns a list of dictionaries
-        '''
+        """
 
-        result_page = requests.get(FaselhdAPI.BASE_URL, params={
-                                   "s": query}, timeout=1000)
+        result_page = requests.get(FaselhdAPI.BASE_URL, params={"s": query}, timeout=1000)
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         animes_div = soup.find("div", id="postList")
         animes = []
-        if animes_div is not None and isinstance(animes_div, element.Tag) :
-            animes = animes_div.find_all(
-                "div", class_="col-xl-2 col-lg-2 col-md-3 col-sm-3")
+        if animes_div is not None and isinstance(animes_div, element.Tag):
+            animes = animes_div.find_all("div", class_="col-xl-2 col-lg-2 col-md-3 col-sm-3")
 
         results = []
         for anime_div in animes:
@@ -42,8 +40,7 @@ class FaselhdAPI(WebsiteAPIInterface):
             result = {}
 
             result["link"] = post_div["href"]
-            result["title"] = post_div.find(
-                "div", class_="postInner").find("div", class_="h1").text
+            result["title"] = post_div.find("div", class_="postInner").find("div", class_="h1").text
 
             results.append(result)
 
@@ -51,9 +48,9 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     @staticmethod
     def is_movie(link):
-        '''
+        """
         takes a webpage link and returns if it is a movie or not
-        '''
+        """
 
         result_page = requests.get(link, timeout=1000)
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
@@ -64,9 +61,9 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     @staticmethod
     def contains_seasons(link):
-        '''
+        """
         takes a webpage link and returnn a it have seasons or not
-        '''
+        """
         reqult_page = requests.get(link, timeout=1000)
         soup = BeautifulSoup(reqult_page.content, FaselhdAPI.HTML_PARSER)
         seasons_div = soup.find("div", id="seasonList")
@@ -75,28 +72,26 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     @staticmethod
     def get_seasons(link):
-        '''
+        """
         takes a webpage link and returns a list of dictionaries with the seasons
         each season can be treated as a search result
-        '''
+        """
 
         result_page = requests.get(link, timeout=1000)
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
 
         seasons = []
         seasons_div = soup.find("div", id="seasonList")
-        seasons_divs = seasons_div.find_all(
-            "div", class_="col-xl-2 col-lg-3 col-md-6")
+        seasons_divs = seasons_div.find_all("div", class_="col-xl-2 col-lg-3 col-md-6")
 
         index = 0
         for season_div in seasons_divs:
-            base_url =  FaselhdAPI.BASE_URL + "/?p="
+            base_url = FaselhdAPI.BASE_URL + "/?p="
             season = {}
 
             season_id = re.search(r"\?p=(\d+)", season_div.find("div", class_="seasonDiv")["onclick"]).group(1)
             season["link"] = base_url + str(season_id)
-            season["title"] = season_div.find(
-                "div", class_="seasonDiv").find("div", class_="title").text
+            season["title"] = season_div.find("div", class_="seasonDiv").find("div", class_="title").text
             season["index"] = index
             index += 1
 
@@ -105,11 +100,10 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     @staticmethod
     def get_episodes(link):
-        '''
+        """
         takes a webpage link and returns a list of dictionaries with the episodes
         each episode can be treated as a search result
-        '''
-
+        """
 
         result_page = requests.get(link, timeout=1000)
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
@@ -132,18 +126,18 @@ class FaselhdAPI(WebsiteAPIInterface):
 
     @staticmethod
     def get_m3u8_link(link):
-        '''
+        """
         this method takes an episode or a movie and returns m3u8 link
         m3u8 link can then be passed to media player to play the video
         this is the worst function i have ever wrote
-        '''
+        """
 
         try:
             result_page = requests.get(link, timeout=1000)
         except requests.RequestException as e:
             print(f"Error: {e}")
             return None
-    
+
         soup = BeautifulSoup(result_page.content, FaselhdAPI.HTML_PARSER)
         frame = soup.find("iframe", {"name": "player_iframe"})
         if not frame:
@@ -151,7 +145,6 @@ class FaselhdAPI(WebsiteAPIInterface):
             return None
 
         frame_link = frame["src"]
-
 
         driver = SeleniumHandler().driver
         driver.get(frame_link)
